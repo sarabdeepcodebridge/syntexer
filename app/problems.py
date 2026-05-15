@@ -29,5 +29,19 @@ problems = [
         ],
         "pseudocode": "1. Take the string as input\n2. Reverse the order of all characters\n3. Return the reversed string",
 
+    },
+{
+        "id": 3,
+        "title": "FizzBuzz",
+        "difficulty": "Easy",
+        "topic": "Loops",
+        "python_solution": "def fizzbuzz(n):\n    for i in range(1, n+1):\n        if i % 3 == 0 and i % 5 == 0:\n            print('FizzBuzz')\n        elif i % 3 == 0:\n            print('Fizz')\n        elif i % 5 == 0:\n            print('Buzz')\n        else:\n            print(i)",
+        "java_solution": "public void fizzBuzz(int n) {\n    for (int i = 1; i <= n; i++) {\n        if (i % 3 == 0 && i % 5 == 0) {\n            System.out.println(\"FizzBuzz\");\n        } else if (i % 3 == 0) {\n            System.out.println(\"Fizz\");\n        } else if (i % 5 == 0) {\n            System.out.println(\"Buzz\");\n        } else {\n            System.out.println(i);\n        }\n    }\n}",
+        "differences": [
+            "Python uses 'and', Java uses '&&'",
+            "Python print() vs Java System.out.println()",
+            "Python range(1, n+1) vs Java for loop with i++"
+        ],
+        "pseudocode": "1. Loop from 1 to n\n2. If divisible by both 3 and 5 → print FizzBuzz\n3. Else if divisible by 3 → print Fizz\n4. Else if divisible by 5 → print Buzz\n5. Else → print the number"
     }
 ]
