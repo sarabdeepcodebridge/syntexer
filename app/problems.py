@@ -78,3 +78,15 @@ problems = [
         "explanation": "The logic is the same in both — loop through, compare, update max. The difference is Java requires you to declare the type of every variable explicitly with 'int'. Python figures out the type automatically. Java's enhanced for loop 'for (int num : nums)' is equivalent to Python's 'for num in nums'.",
     },
 ]
+glossary = [
+    {"python": "list", "java": "ArrayList", "example": "[] vs new ArrayList<>()"},
+    {"python": "dict", "java": "HashMap", "example": "{} vs new HashMap<>()"},
+    {"python": "len()", "java": ".size() / .length", "example": "len(arr) vs arr.length"},
+    {"python": "None", "java": "null", "example": "if x is None vs if x == null"},
+    {"python": "True / False", "java": "true / false", "example": "Lowercase in Java"},
+    {"python": "print()", "java": "System.out.println()", "example": "print('hi') vs System.out.println('hi')"},
+    {"python": "and / or", "java": "&& / ||", "example": "if a and b vs if (a && b)"},
+    {"python": "def", "java": "public void / int / String", "example": "def fn() vs public void fn()"},
+    {"python": "self", "java": "this", "example": "self.name vs this.name"},
+    {"python": "elif", "java": "else if", "example": "elif x vs else if (x)"},
+]

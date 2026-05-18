@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template
-from app.problems import problems
+from app.problems import problems, glossary
 
 main = Blueprint("main", __name__)
 
@@ -22,3 +22,7 @@ def category(topic):
 def problem_detail(id):
     problem = next((p for p in problems if p["id"] == id), None)
     return render_template("problem.html", problem=problem)
+
+@main.route("/glossary")
+def glossary_page():
+    return render_template("glossary.html", glossary=glossary)
