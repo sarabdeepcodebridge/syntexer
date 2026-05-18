@@ -43,5 +43,19 @@ problems = [
             "Python range(1, n+1) vs Java for loop with i++"
         ],
         "pseudocode": "1. Loop from 1 to n\n2. If divisible by both 3 and 5 → print FizzBuzz\n3. Else if divisible by 3 → print Fizz\n4. Else if divisible by 5 → print Buzz\n5. Else → print the number"
+    },
+{
+        "id": 4,
+        "title": "Palindrome Check",
+        "difficulty": "Easy",
+        "topic": "Strings",
+        "python_solution": "def is_palindrome(s):\n    return s == s[::-1]",
+        "java_solution": "public boolean isPalindrome(String s) {\n    String reversed = new StringBuilder(s).reverse().toString();\n    return s.equals(reversed);\n}",
+        "differences": [
+            "Python slicing [::-1] vs Java StringBuilder.reverse()",
+            "Python == compares strings directly, Java uses .equals()",
+            "Python returns in one line, Java needs multiple steps"
+        ],
+        "pseudocode": "1. Take string as input\n2. Reverse the string\n3. Compare reversed string with original\n4. If they match → return true\n5. Otherwise → return false"
     }
 ]

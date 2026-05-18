@@ -5,7 +5,18 @@ main = Blueprint("main", __name__)
 
 @main.route("/")
 def index():
-    return render_template("index.html", problems=problems)
+    categories = {}
+    for problem in problems:
+        topic = problem["topic"]
+        if topic not in categories:
+            categories[topic] = []
+        categories[topic].append(problem)
+    return render_template("index.html", categories=categories)
+
+@main.route("/category/<topic>")
+def category(topic):
+    category_problems = [p for p in problems if p["topic"] == topic]
+    return render_template("category.html", topic=topic, problems=category_problems)
 
 @main.route("/problem/<int:id>")
 def problem_detail(id):
