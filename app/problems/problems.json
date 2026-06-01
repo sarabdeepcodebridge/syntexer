@@ -1,0 +1,482 @@
+[
+  {
+    "id": 1, "title": "Two Sum", "difficulty": "Easy", "topic": "Arrays",
+    "python_solution": "def two_sum(nums, target):\n    seen = {}\n    for i, num in enumerate(nums):\n        diff = target - num\n        if diff in seen:\n            return [seen[diff], i]\n        seen[num] = i",
+    "java_solution": "public int[] twoSum(int[] nums, int target) {\n    Map<Integer,Integer> seen = new HashMap<>();\n    for (int i = 0; i < nums.length; i++) {\n        int diff = target - nums[i];\n        if (seen.containsKey(diff)) return new int[]{seen.get(diff), i};\n        seen.put(nums[i], i);\n    }\n    return new int[]{};\n}",
+    "differences": ["Python dict vs Java HashMap", "Python enumerate() vs Java index loop", "Python returns list, Java returns int[]"],
+    "pseudocode": "1. Create empty map\n2. For each number:\n3.   If target-num in map → return indexes\n4.   Store num→index in map",
+    "explanation": "Python uses a dictionary to store numbers it has seen. Java uses a HashMap which requires explicit type declarations. The core logic is identical — only syntax differs."
+  },
+  {
+    "id": 2, "title": "Find Max in Array", "difficulty": "Easy", "topic": "Arrays",
+    "python_solution": "def find_max(nums):\n    max_val = nums[0]\n    for num in nums:\n        if num > max_val:\n            max_val = num\n    return max_val",
+    "java_solution": "public int findMax(int[] nums) {\n    int maxVal = nums[0];\n    for (int num : nums) {\n        if (num > maxVal) maxVal = num;\n    }\n    return maxVal;\n}",
+    "differences": ["Java requires int type declaration", "Python for-in vs Java enhanced for loop", "Python is fewer lines — same logic"],
+    "pseudocode": "1. Set max to first element\n2. Loop through every number\n3. If current > max → update max\n4. Return max",
+    "explanation": "The logic is identical. Java requires explicit type declarations while Python figures out the type automatically."
+  },
+  {
+    "id": 3, "title": "Binary Search", "difficulty": "Medium", "topic": "Arrays",
+    "python_solution": "def binary_search(nums, target):\n    left, right = 0, len(nums) - 1\n    while left <= right:\n        mid = (left + right) // 2\n        if nums[mid] == target: return mid\n        elif nums[mid] < target: left = mid + 1\n        else: right = mid - 1\n    return -1",
+    "java_solution": "public int binarySearch(int[] nums, int target) {\n    int left = 0, right = nums.length - 1;\n    while (left <= right) {\n        int mid = (left + right) / 2;\n        if (nums[mid] == target) return mid;\n        else if (nums[mid] < target) left = mid + 1;\n        else right = mid - 1;\n    }\n    return -1;\n}",
+    "differences": ["Python // for integer division, Java / works for ints", "Python len(nums) vs Java nums.length", "Python unpacks two variables in one line"],
+    "pseudocode": "1. Set left=0, right=last index\n2. While left<=right:\n3.   Mid = (left+right)//2\n4.   If mid==target → return\n5.   Adjust left or right\n6. Return -1",
+    "explanation": "Binary search cuts search space in half each time. Python uses // to force whole numbers. Java's / does integer division automatically for int types."
+  },
+  {
+    "id": 4, "title": "Contains Duplicate", "difficulty": "Easy", "topic": "Arrays",
+    "python_solution": "def contains_duplicate(nums):\n    return len(nums) != len(set(nums))",
+    "java_solution": "public boolean containsDuplicate(int[] nums) {\n    Set<Integer> seen = new HashSet<>();\n    for (int num : nums) {\n        if (!seen.add(num)) return true;\n    }\n    return false;\n}",
+    "differences": ["Python one-liner using set conversion", "Java builds HashSet manually", "HashSet.add() returns false if duplicate exists"],
+    "pseudocode": "1. Add each number to a set\n2. If set size differs from array size → duplicate exists",
+    "explanation": "Python's set conversion removes duplicates — if lengths differ, there were duplicates. Java's HashSet.add() returns false if element already exists."
+  },
+  {
+    "id": 5, "title": "Rotate Array", "difficulty": "Medium", "topic": "Arrays",
+    "python_solution": "def rotate(nums, k):\n    k = k % len(nums)\n    nums[:] = nums[-k:] + nums[:-k]",
+    "java_solution": "public void rotate(int[] nums, int k) {\n    k = k % nums.length;\n    reverse(nums, 0, nums.length-1);\n    reverse(nums, 0, k-1);\n    reverse(nums, k, nums.length-1);\n}\nvoid reverse(int[] a, int l, int r) {\n    while(l<r){int t=a[l];a[l++]=a[r];a[r--]=t;}\n}",
+    "differences": ["Python slicing rotates in one line", "Java uses three-reverse algorithm", "Python modifies list in place with nums[:]"],
+    "pseudocode": "1. Normalize k = k % length\n2. Reverse entire array\n3. Reverse first k elements\n4. Reverse remaining elements",
+    "explanation": "Python's slicing makes array rotation elegant. Java lacks slicing so uses the three-reverse algorithm. Both are O(n) time."
+  },
+  {
+    "id": 6, "title": "Move Zeroes", "difficulty": "Easy", "topic": "Arrays",
+    "python_solution": "def move_zeroes(nums):\n    pos = 0\n    for num in nums:\n        if num != 0:\n            nums[pos] = num\n            pos += 1\n    while pos < len(nums):\n        nums[pos] = 0\n        pos += 1",
+    "java_solution": "public void moveZeroes(int[] nums) {\n    int pos = 0;\n    for (int num : nums) if (num != 0) nums[pos++] = num;\n    while (pos < nums.length) nums[pos++] = 0;\n}",
+    "differences": ["Python pos += 1 vs Java pos++ post-increment", "Python len(nums) vs Java nums.length", "Logic is identical — two-pointer pattern"],
+    "pseudocode": "1. Track position pointer at 0\n2. Copy all non-zero elements forward\n3. Fill remaining positions with zeros",
+    "explanation": "Classic two-pointer pattern. The main difference is Java's post-increment ++ which Python replaces with += 1."
+  },
+  {
+    "id": 7, "title": "Maximum Subarray", "difficulty": "Medium", "topic": "Arrays",
+    "python_solution": "def max_subarray(nums):\n    max_sum = current = nums[0]\n    for num in nums[1:]:\n        current = max(num, current + num)\n        max_sum = max(max_sum, current)\n    return max_sum",
+    "java_solution": "public int maxSubArray(int[] nums) {\n    int maxSum = nums[0], current = nums[0];\n    for (int i = 1; i < nums.length; i++) {\n        current = Math.max(nums[i], current + nums[i]);\n        maxSum = Math.max(maxSum, current);\n    }\n    return maxSum;\n}",
+    "differences": ["Python built-in max() vs Java Math.max()", "Python slicing nums[1:] vs Java index starting at 1", "Python multiple assignment in one line"],
+    "pseudocode": "1. Set max and current to first element\n2. For each remaining number:\n3.   current = max(num, current+num)\n4.   max_sum = max(max_sum, current)\n5. Return max_sum",
+    "explanation": "Kadane's algorithm is identical in both. Python's built-in max() is cleaner than Java's Math.max(). Python's nums[1:] avoids index management Java requires."
+  },
+  {
+    "id": 8, "title": "Single Number", "difficulty": "Easy", "topic": "Arrays",
+    "python_solution": "def single_number(nums):\n    result = 0\n    for num in nums:\n        result ^= num\n    return result",
+    "java_solution": "public int singleNumber(int[] nums) {\n    int result = 0;\n    for (int num : nums) result ^= num;\n    return result;\n}",
+    "differences": ["XOR works identically in both languages", "Python for-in vs Java for (int num : nums)", "Java requires int type declaration"],
+    "pseudocode": "1. Initialize result = 0\n2. XOR every number with result\n3. Duplicates cancel out\n4. Return result",
+    "explanation": "XOR of a number with itself is 0, so duplicates cancel leaving only the unique number. One of the rare cases Python and Java look almost identical."
+  },
+  {
+    "id": 9, "title": "Product Except Self", "difficulty": "Medium", "topic": "Arrays",
+    "python_solution": "def product_except_self(nums):\n    n = len(nums)\n    result = [1] * n\n    left = 1\n    for i in range(n):\n        result[i] = left\n        left *= nums[i]\n    right = 1\n    for i in range(n-1, -1, -1):\n        result[i] *= right\n        right *= nums[i]\n    return result",
+    "java_solution": "public int[] productExceptSelf(int[] nums) {\n    int n = nums.length;\n    int[] result = new int[n];\n    Arrays.fill(result, 1);\n    int left = 1;\n    for (int i=0;i<n;i++){result[i]=left;left*=nums[i];}\n    int right = 1;\n    for (int i=n-1;i>=0;i--){result[i]*=right;right*=nums[i];}\n    return result;\n}",
+    "differences": ["Python [1]*n creates array, Java needs Arrays.fill()", "Python range(n-1,-1,-1) for reverse vs Java i--", "Java needs explicit array size: new int[n]"],
+    "pseudocode": "1. Create result array of 1s\n2. Left pass: multiply all elements to the left\n3. Right pass: multiply all elements to the right\n4. Return result",
+    "explanation": "Two-pass O(n) solution. Python's [1]*n is concise. Java needs Arrays.fill() for the same effect. Algorithm is identical."
+  },
+  {
+    "id": 10, "title": "3Sum", "difficulty": "Medium", "topic": "Arrays",
+    "python_solution": "def three_sum(nums):\n    nums.sort()\n    result = []\n    for i in range(len(nums)-2):\n        if i > 0 and nums[i] == nums[i-1]: continue\n        l, r = i+1, len(nums)-1\n        while l < r:\n            s = nums[i]+nums[l]+nums[r]\n            if s == 0:\n                result.append([nums[i],nums[l],nums[r]])\n                while l<r and nums[l]==nums[l+1]: l+=1\n                while l<r and nums[r]==nums[r-1]: r-=1\n                l+=1; r-=1\n            elif s < 0: l+=1\n            else: r-=1\n    return result",
+    "java_solution": "public List<List<Integer>> threeSum(int[] nums) {\n    Arrays.sort(nums);\n    List<List<Integer>> res = new ArrayList<>();\n    for (int i=0;i<nums.length-2;i++) {\n        if (i>0 && nums[i]==nums[i-1]) continue;\n        int l=i+1, r=nums.length-1;\n        while (l<r) {\n            int s=nums[i]+nums[l]+nums[r];\n            if (s==0){res.add(Arrays.asList(nums[i],nums[l],nums[r]));while(l<r&&nums[l]==nums[l+1])l++;while(l<r&&nums[r]==nums[r-1])r--;l++;r--;}\n            else if (s<0) l++; else r--;\n        }\n    }\n    return res;\n}",
+    "differences": ["Python list vs Java List<List<Integer>>", "Python result.append([]) vs Java result.add(Arrays.asList())", "Java requires explicit generic types"],
+    "pseudocode": "1. Sort array\n2. For each element as anchor:\n3.   Two pointers for remaining two\n4.   Skip duplicates\n5.   Collect triplets summing to 0",
+    "explanation": "Two-pointer after sorting is identical in both. The biggest difference is Java's verbose generic type system vs Python's simple list."
+  },
+  {
+    "id": 11, "title": "Merge Sorted Arrays", "difficulty": "Easy", "topic": "Arrays",
+    "python_solution": "def merge(nums1, m, nums2, n):\n    i, j, k = m-1, n-1, m+n-1\n    while i >= 0 and j >= 0:\n        if nums1[i] > nums2[j]:\n            nums1[k] = nums1[i]; i -= 1\n        else:\n            nums1[k] = nums2[j]; j -= 1\n        k -= 1\n    while j >= 0:\n        nums1[k] = nums2[j]; j -= 1; k -= 1",
+    "java_solution": "public void merge(int[] nums1, int m, int[] nums2, int n) {\n    int i=m-1, j=n-1, k=m+n-1;\n    while (i>=0 && j>=0)\n        nums1[k--] = nums1[i]>nums2[j] ? nums1[i--] : nums2[j--];\n    while (j>=0) nums1[k--] = nums2[j--];\n}",
+    "differences": ["Java uses ternary operator ? : for compact code", "Java k-- combines decrement with use", "Python is more readable, Java more compact"],
+    "pseudocode": "1. Start from end of both arrays\n2. Compare and place larger element at end\n3. Copy remaining elements",
+    "explanation": "Merging from the end avoids overwriting. Java's ternary and post-decrement make it compact. Python separates steps for readability. Same algorithm."
+  },
+  {
+    "id": 12, "title": "Find Duplicate Number", "difficulty": "Medium", "topic": "Arrays",
+    "python_solution": "def find_duplicate(nums):\n    slow = fast = nums[0]\n    while True:\n        slow = nums[slow]\n        fast = nums[nums[fast]]\n        if slow == fast: break\n    slow = nums[0]\n    while slow != fast:\n        slow = nums[slow]\n        fast = nums[fast]\n    return slow",
+    "java_solution": "public int findDuplicate(int[] nums) {\n    int slow = nums[0], fast = nums[0];\n    do { slow=nums[slow]; fast=nums[nums[fast]]; } while(slow!=fast);\n    slow = nums[0];\n    while (slow!=fast){slow=nums[slow];fast=nums[fast];}\n    return slow;\n}",
+    "differences": ["Python while True with break vs Java do-while loop", "Java has do-while, Python does not", "Logic is identical — Floyd's cycle detection"],
+    "pseudocode": "1. Phase 1: Find intersection using fast/slow pointers\n2. Phase 2: Find cycle entrance\n3. Return entrance = duplicate",
+    "explanation": "Floyd's cycle detection. Java has do-while loop which Python lacks — Python uses while True with break instead. The algorithm is identical."
+  },
+  {
+    "id": 13, "title": "Subarray Sum Equals K", "difficulty": "Medium", "topic": "Arrays",
+    "python_solution": "def subarray_sum(nums, k):\n    count = 0\n    prefix = {0: 1}\n    total = 0\n    for num in nums:\n        total += num\n        count += prefix.get(total - k, 0)\n        prefix[total] = prefix.get(total, 0) + 1\n    return count",
+    "java_solution": "public int subarraySum(int[] nums, int k) {\n    int count=0, total=0;\n    Map<Integer,Integer> prefix = new HashMap<>();\n    prefix.put(0,1);\n    for (int num : nums) {\n        total += num;\n        count += prefix.getOrDefault(total-k, 0);\n        prefix.put(total, prefix.getOrDefault(total,0)+1);\n    }\n    return count;\n}",
+    "differences": ["Python dict.get(key,0) vs Java map.getOrDefault(key,0)", "Python dict literal {0:1} vs Java map.put(0,1)", "Logic is identical — prefix sum technique"],
+    "pseudocode": "1. Track prefix sums in map\n2. For each element:\n3.   Check if (total-k) seen before\n4.   Add current total to map",
+    "explanation": "Prefix sum technique. Python's dict.get() and Java's getOrDefault() are equivalent. Python's dict literal initialization is cleaner than Java's put()."
+  },
+  {
+    "id": 14, "title": "Jump Game", "difficulty": "Medium", "topic": "Arrays",
+    "python_solution": "def can_jump(nums):\n    max_reach = 0\n    for i, num in enumerate(nums):\n        if i > max_reach: return False\n        max_reach = max(max_reach, i + num)\n    return True",
+    "java_solution": "public boolean canJump(int[] nums) {\n    int maxReach = 0;\n    for (int i=0; i<nums.length; i++) {\n        if (i > maxReach) return false;\n        maxReach = Math.max(maxReach, i + nums[i]);\n    }\n    return true;\n}",
+    "differences": ["Python enumerate() vs Java manual index", "Python max() vs Java Math.max()", "Python True/False vs Java true/false"],
+    "pseudocode": "1. Track maximum reachable index\n2. For each position:\n3.   If position unreachable → false\n4.   Update max reach\n5. Return true",
+    "explanation": "Greedy approach. Python's enumerate() gives index and value together. Java needs separate index variable. Python's True/False capitalization vs Java's true/false."
+  },
+  {
+    "id": 15, "title": "Find Missing Number", "difficulty": "Easy", "topic": "Arrays",
+    "python_solution": "def missing_number(nums):\n    n = len(nums)\n    return n*(n+1)//2 - sum(nums)",
+    "java_solution": "public int missingNumber(int[] nums) {\n    int n = nums.length;\n    int expected = n*(n+1)/2;\n    int actual = 0;\n    for (int num : nums) actual += num;\n    return expected - actual;\n}",
+    "differences": ["Python sum() built-in vs Java manual sum loop", "Python one-liner vs Java multiple lines", "Python // vs Java / for integer division"],
+    "pseudocode": "1. Expected sum = n*(n+1)/2\n2. Actual sum = sum of array\n3. Missing = expected - actual",
+    "explanation": "Gauss formula. Python's sum() built-in eliminates the need for an explicit loop. Python solves it in one line. Java needs explicit loop for summing."
+  },
+  {
+    "id": 16, "title": "Best Time to Buy Stock", "difficulty": "Easy", "topic": "Arrays",
+    "python_solution": "def max_profit(prices):\n    min_price = float('inf')\n    max_profit = 0\n    for price in prices:\n        min_price = min(min_price, price)\n        max_profit = max(max_profit, price - min_price)\n    return max_profit",
+    "java_solution": "public int maxProfit(int[] prices) {\n    int minPrice = Integer.MAX_VALUE, maxProfit = 0;\n    for (int price : prices) {\n        minPrice = Math.min(minPrice, price);\n        maxProfit = Math.max(maxProfit, price - minPrice);\n    }\n    return maxProfit;\n}",
+    "differences": ["Python float('inf') vs Java Integer.MAX_VALUE", "Python min()/max() vs Java Math.min()/Math.max()", "Logic is identical"],
+    "pseudocode": "1. Track minimum price seen\n2. For each price:\n3.   Update min price\n4.   Update max profit\n5. Return max profit",
+    "explanation": "Python uses float('inf') as initial minimum — a Pythonic way to represent infinity. Java uses Integer.MAX_VALUE. Both represent the largest possible value for comparison purposes."
+  },
+  {
+    "id": 17, "title": "Valid Sudoku", "difficulty": "Medium", "topic": "Arrays",
+    "python_solution": "def is_valid_sudoku(board):\n    rows = [set() for _ in range(9)]\n    cols = [set() for _ in range(9)]\n    boxes = [set() for _ in range(9)]\n    for r in range(9):\n        for c in range(9):\n            val = board[r][c]\n            if val == '.': continue\n            box = (r//3)*3 + c//3\n            if val in rows[r] or val in cols[c] or val in boxes[box]:\n                return False\n            rows[r].add(val)\n            cols[c].add(val)\n            boxes[box].add(val)\n    return True",
+    "java_solution": "public boolean isValidSudoku(char[][] board) {\n    Set<Character>[] rows = new HashSet[9];\n    Set<Character>[] cols = new HashSet[9];\n    Set<Character>[] boxes = new HashSet[9];\n    for (int i=0;i<9;i++){rows[i]=new HashSet<>();cols[i]=new HashSet<>();boxes[i]=new HashSet<>();}\n    for (int r=0;r<9;r++) for (int c=0;c<9;c++) {\n        char val=board[r][c];\n        if (val=='.') continue;\n        int box=(r/3)*3+c/3;\n        if (!rows[r].add(val)||!cols[c].add(val)||!boxes[box].add(val)) return false;\n    }\n    return true;\n}",
+    "differences": ["Python list comprehension for initialization vs Java explicit loop", "Python 'val in set' vs Java Set.add() return value trick", "Java array of Sets needs explicit initialization"],
+    "pseudocode": "1. Create sets for rows, cols, 3x3 boxes\n2. For each cell:\n3.   Skip empty cells\n4.   Check if value already in row/col/box\n5.   Add value to sets",
+    "explanation": "Python's list comprehension [set() for _ in range(9)] initializes 9 sets cleanly. Java needs an explicit loop. Python's 'in' operator vs Java's Set.add() returning false on duplicate."
+  },
+  {
+    "id": 18, "title": "Spiral Matrix", "difficulty": "Medium", "topic": "Arrays",
+    "python_solution": "def spiral_order(matrix):\n    result = []\n    while matrix:\n        result += matrix.pop(0)\n        matrix = list(zip(*matrix))[::-1]\n    return result",
+    "java_solution": "public List<Integer> spiralOrder(int[][] matrix) {\n    List<Integer> res = new ArrayList<>();\n    while (matrix.length>0 && matrix[0].length>0) {\n        for (int x : matrix[0]) res.add(x);\n        int[][] tmp = new int[matrix[0].length][matrix.length-1];\n        for (int r=1;r<matrix.length;r++) for (int c=matrix[r].length-1;c>=0;c--) tmp[c][r-1]=matrix[r][c];\n        matrix = tmp;\n    }\n    return res;\n}",
+    "differences": ["Python uses zip(*matrix) transpose trick", "Python list(zip(*matrix))[::-1] rotates matrix elegantly", "Java requires explicit transposition loops"],
+    "pseudocode": "1. While matrix not empty:\n2.   Add top row to result\n3.   Rotate remaining matrix 90 degrees\n4. Return result",
+    "explanation": "Python's zip(*matrix) transposes a matrix in one expression — one of Python's most powerful tricks. Java requires explicit nested loops for the same transformation."
+  },
+  {
+    "id": 19, "title": "Intersection of Two Arrays", "difficulty": "Easy", "topic": "Arrays",
+    "python_solution": "def intersection(nums1, nums2):\n    return list(set(nums1) & set(nums2))",
+    "java_solution": "public int[] intersection(int[] nums1, int[] nums2) {\n    Set<Integer> set1 = new HashSet<>();\n    for (int n : nums1) set1.add(n);\n    Set<Integer> result = new HashSet<>();\n    for (int n : nums2) if (set1.contains(n)) result.add(n);\n    return result.stream().mapToInt(Integer::intValue).toArray();\n}",
+    "differences": ["Python set intersection with & operator", "Java needs explicit loops to build sets", "Java needs Stream to convert Set to array"],
+    "pseudocode": "1. Convert both arrays to sets\n2. Return intersection of sets",
+    "explanation": "Python's & operator finds set intersection in one line. Java needs explicit loops and Stream API for the same result. Python's set operations are dramatically more concise."
+  },
+  {
+    "id": 20, "title": "Longest Consecutive Sequence", "difficulty": "Medium", "topic": "Arrays",
+    "python_solution": "def longest_consecutive(nums):\n    num_set = set(nums)\n    best = 0\n    for n in num_set:\n        if n-1 not in num_set:\n            curr, streak = n, 1\n            while curr+1 in num_set:\n                curr += 1; streak += 1\n            best = max(best, streak)\n    return best",
+    "java_solution": "public int longestConsecutive(int[] nums) {\n    Set<Integer> set = new HashSet<>();\n    for (int n : nums) set.add(n);\n    int best = 0;\n    for (int n : set) {\n        if (!set.contains(n-1)) {\n            int curr=n, streak=1;\n            while (set.contains(curr+1)){curr++;streak++;}\n            best = Math.max(best, streak);\n        }\n    }\n    return best;\n}",
+    "differences": ["Python 'n-1 not in set' vs Java !set.contains(n-1)", "Python max() vs Java Math.max()", "Logic is identical — O(n) using set"],
+    "pseudocode": "1. Put all numbers in a set\n2. For each sequence start:\n3.   Count consecutive streak\n4.   Update best",
+    "explanation": "O(n) solution using a hash set. Python's 'in' and 'not in' operators are more readable than Java's contains() and !contains(). The algorithm is identical."
+  },
+  {
+    "id": 21, "title": "Reverse a String", "difficulty": "Easy", "topic": "Strings",
+    "python_solution": "def reverse_string(s):\n    return s[::-1]",
+    "java_solution": "public String reverseString(String s) {\n    return new StringBuilder(s).reverse().toString();\n}",
+    "differences": ["Python slicing [::-1] vs Java StringBuilder", "Python one line, Java needs method chaining", "No type declaration in Python"],
+    "pseudocode": "1. Reverse all characters\n2. Return reversed string",
+    "explanation": "Python's [::-1] slicing reads the string backwards. Java uses StringBuilder — a mutable string object designed for manipulation."
+  },
+  {
+    "id": 22, "title": "Palindrome Check", "difficulty": "Easy", "topic": "Strings",
+    "python_solution": "def is_palindrome(s):\n    return s == s[::-1]",
+    "java_solution": "public boolean isPalindrome(String s) {\n    String rev = new StringBuilder(s).reverse().toString();\n    return s.equals(rev);\n}",
+    "differences": ["Python == for string comparison, Java uses .equals()", "Python slicing vs Java StringBuilder", "== in Java compares memory, not content"],
+    "pseudocode": "1. Reverse string\n2. Compare with original",
+    "explanation": "Most common Java mistake for Python devs: using == for string comparison. In Java, == compares memory addresses. Always use .equals() for string content comparison."
+  },
+  {
+    "id": 23, "title": "Count Vowels", "difficulty": "Easy", "topic": "Strings",
+    "python_solution": "def count_vowels(s):\n    return sum(1 for c in s if c.lower() in 'aeiou')",
+    "java_solution": "public int countVowels(String s) {\n    int count = 0;\n    for (char c : s.toCharArray())\n        if (\"aeiou\".indexOf(Character.toLowerCase(c)) != -1) count++;\n    return count;\n}",
+    "differences": ["Python generator expression vs Java for loop", "Python 'in string' vs Java indexOf() != -1", "Python iterates string directly, Java needs toCharArray()"],
+    "pseudocode": "1. For each character\n2. Check if lowercase version is a vowel\n3. Count matches",
+    "explanation": "Python's generator expression is concise. Java needs toCharArray() to iterate characters. Python's 'in' operator is more readable than Java's indexOf() != -1."
+  },
+  {
+    "id": 24, "title": "Valid Anagram", "difficulty": "Easy", "topic": "Strings",
+    "python_solution": "def is_anagram(s, t):\n    return sorted(s) == sorted(t)",
+    "java_solution": "public boolean isAnagram(String s, String t) {\n    char[] a=s.toCharArray(), b=t.toCharArray();\n    Arrays.sort(a); Arrays.sort(b);\n    return Arrays.equals(a, b);\n}",
+    "differences": ["Python sorted() works on strings directly", "Java needs toCharArray() then Arrays.sort()", "Python == vs Java Arrays.equals()"],
+    "pseudocode": "1. Sort both strings\n2. Compare sorted versions",
+    "explanation": "Python treats strings as sequences — sorted() works directly. Java must convert to char array first. This pattern repeats often: Python sequences vs Java objects."
+  },
+  {
+    "id": 25, "title": "Longest Common Prefix", "difficulty": "Easy", "topic": "Strings",
+    "python_solution": "def longest_common_prefix(strs):\n    if not strs: return ''\n    prefix = strs[0]\n    for s in strs[1:]:\n        while not s.startswith(prefix):\n            prefix = prefix[:-1]\n            if not prefix: return ''\n    return prefix",
+    "java_solution": "public String longestCommonPrefix(String[] strs) {\n    if (strs.length==0) return \"\";\n    String prefix = strs[0];\n    for (int i=1;i<strs.length;i++) {\n        while (!strs[i].startsWith(prefix)) {\n            prefix = prefix.substring(0, prefix.length()-1);\n            if (prefix.isEmpty()) return \"\";\n        }\n    }\n    return prefix;\n}",
+    "differences": ["Python prefix[:-1] slicing vs Java substring()", "Python 'not strs' vs Java strs.length==0", "Python 'not prefix' vs Java isEmpty()"],
+    "pseudocode": "1. Start with first string as prefix\n2. Shrink prefix until it matches each string\n3. Return prefix",
+    "explanation": "Python's slicing prefix[:-1] removes last character cleanly. Java needs substring(0, length-1). Python's truthiness checks are more concise than Java's explicit method calls."
+  },
+  {
+    "id": 26, "title": "Valid Parentheses", "difficulty": "Easy", "topic": "Strings",
+    "python_solution": "def is_valid(s):\n    stack = []\n    mapping = {')':'(', '}':'{', ']':'['}\n    for char in s:\n        if char in mapping:\n            top = stack.pop() if stack else '#'\n            if mapping[char] != top: return False\n        else:\n            stack.append(char)\n    return not stack",
+    "java_solution": "public boolean isValid(String s) {\n    Stack<Character> stack = new Stack<>();\n    for (char c : s.toCharArray()) {\n        if (c=='('||c=='{'||c=='[') stack.push(c);\n        else {\n            if (stack.isEmpty()) return false;\n            char top = stack.pop();\n            if ((c==')'&&top!='(')||(c=='}'&&top!='{')||(c==']'&&top!='[')) return false;\n        }\n    }\n    return stack.isEmpty();\n}",
+    "differences": ["Python dict for mapping vs Java explicit comparisons", "Python 'not stack' vs Java stack.isEmpty()", "Python ternary: stack.pop() if stack else '#'"],
+    "pseudocode": "1. For each char:\n2.   Opening → push to stack\n3.   Closing → check top matches\n4. Return true if stack empty",
+    "explanation": "Python's dictionary mapping is cleaner than Java's explicit comparisons. Python's 'not stack' (empty list is falsy) vs Java's isEmpty(). The stack algorithm is identical."
+  },
+  {
+    "id": 27, "title": "Longest Substring No Repeat", "difficulty": "Medium", "topic": "Strings",
+    "python_solution": "def length_of_longest_substring(s):\n    char_idx = {}\n    max_len = left = 0\n    for right, char in enumerate(s):\n        if char in char_idx and char_idx[char] >= left:\n            left = char_idx[char] + 1\n        char_idx[char] = right\n        max_len = max(max_len, right - left + 1)\n    return max_len",
+    "java_solution": "public int lengthOfLongestSubstring(String s) {\n    Map<Character,Integer> map = new HashMap<>();\n    int maxLen=0, left=0;\n    for (int r=0; r<s.length(); r++) {\n        char c = s.charAt(r);\n        if (map.containsKey(c) && map.get(c)>=left) left=map.get(c)+1;\n        map.put(c, r);\n        maxLen = Math.max(maxLen, r-left+1);\n    }\n    return maxLen;\n}",
+    "differences": ["Python enumerate() vs Java manual index", "Python 'char in dict' vs Java containsKey()", "Python max() vs Java Math.max()"],
+    "pseudocode": "1. Sliding window with left/right pointers\n2. Track last seen index per character\n3. If char repeated → move left pointer\n4. Update max length",
+    "explanation": "Sliding window technique. Python's enumerate() gives both index and value. Java's Map requires containsKey() and get() separately. Core algorithm is identical."
+  },
+  {
+    "id": 28, "title": "First Non-Repeating Char", "difficulty": "Medium", "topic": "Strings",
+    "python_solution": "def first_unique_char(s):\n    count = {}\n    for c in s: count[c] = count.get(c,0) + 1\n    for i, c in enumerate(s):\n        if count[c] == 1: return i\n    return -1",
+    "java_solution": "public int firstUniqChar(String s) {\n    Map<Character,Integer> count = new HashMap<>();\n    for (char c : s.toCharArray()) count.put(c, count.getOrDefault(c,0)+1);\n    for (int i=0; i<s.length(); i++)\n        if (count.get(s.charAt(i))==1) return i;\n    return -1;\n}",
+    "differences": ["Python dict.get(key,default) vs Java getOrDefault()", "Python enumerate() vs Java index loop", "Python s[i] vs Java s.charAt(i)"],
+    "pseudocode": "1. Count frequency of each character\n2. Return index of first character with count 1",
+    "explanation": "Both use hash map to count frequencies. Python's dict.get(key,0) and Java's getOrDefault() are equivalent. Python's enumerate() is cleaner than Java's manual index tracking."
+  },
+  {
+    "id": 29, "title": "String to Integer atoi", "difficulty": "Medium", "topic": "Strings",
+    "python_solution": "def my_atoi(s):\n    s = s.strip()\n    if not s: return 0\n    sign = -1 if s[0]=='-' else 1\n    if s[0] in ('+','-'): s = s[1:]\n    result = 0\n    for c in s:\n        if not c.isdigit(): break\n        result = result*10 + int(c)\n    return max(-2**31, min(sign*result, 2**31-1))",
+    "java_solution": "public int myAtoi(String s) {\n    s=s.trim(); if(s.isEmpty()) return 0;\n    int sign=1, i=0;\n    if(s.charAt(0)=='-'){sign=-1;i++;} else if(s.charAt(0)=='+') i++;\n    long result=0;\n    while(i<s.length()&&Character.isDigit(s.charAt(i))){\n        result=result*10+(s.charAt(i++)-'0');\n        if(result*sign>Integer.MAX_VALUE) return Integer.MAX_VALUE;\n        if(result*sign<Integer.MIN_VALUE) return Integer.MIN_VALUE;\n    }\n    return (int)(result*sign);\n}",
+    "differences": ["Python int(c) converts char, Java uses c-'0' ASCII trick", "Python handles overflow with min/max at end", "Java checks overflow during loop with long"],
+    "pseudocode": "1. Strip whitespace, handle sign\n2. Convert digits one by one\n3. Handle overflow\n4. Return result",
+    "explanation": "Python integers can be arbitrarily large — overflow handled at end. Java uses long as buffer during computation. Java's c-'0' converts char to digit using ASCII values."
+  },
+  {
+    "id": 30, "title": "Count and Say", "difficulty": "Medium", "topic": "Strings",
+    "python_solution": "def count_and_say(n):\n    result = '1'\n    for _ in range(n-1):\n        new_res = ''\n        i = 0\n        while i < len(result):\n            count = 1\n            while i+count<len(result) and result[i]==result[i+count]: count+=1\n            new_res += str(count) + result[i]\n            i += count\n        result = new_res\n    return result",
+    "java_solution": "public String countAndSay(int n) {\n    String result=\"1\";\n    for(int i=1;i<n;i++){\n        StringBuilder sb=new StringBuilder();\n        int j=0;\n        while(j<result.length()){\n            int count=1;\n            while(j+count<result.length()&&result.charAt(j)==result.charAt(j+count)) count++;\n            sb.append(count).append(result.charAt(j));\n            j+=count;\n        }\n        result=sb.toString();\n    }\n    return result;\n}",
+    "differences": ["Python string += vs Java StringBuilder.append()", "Python result[i] vs Java result.charAt(i)", "StringBuilder is more efficient for repeated concatenation"],
+    "pseudocode": "1. Start with '1'\n2. Each iteration: count consecutive identical digits\n3. Build new string from counts and digits",
+    "explanation": "Python string concatenation with += creates new strings each time — less efficient but clear. Java's StringBuilder appends in place and is more efficient for loops."
+  },
+  {
+    "id": 31, "title": "Word Frequency Count", "difficulty": "Easy", "topic": "Strings",
+    "python_solution": "def word_frequency(s):\n    freq = {}\n    for word in s.split():\n        freq[word] = freq.get(word, 0) + 1\n    return freq",
+    "java_solution": "public Map<String,Integer> wordFrequency(String s) {\n    Map<String,Integer> freq = new HashMap<>();\n    for (String word : s.split(\" \")) {\n        freq.put(word, freq.getOrDefault(word,0)+1);\n    }\n    return freq;\n}",
+    "differences": ["Python s.split() splits on any whitespace, Java needs \" \"", "Python dict.get() vs Java getOrDefault()", "Return type annotation needed in Java"],
+    "pseudocode": "1. Split string into words\n2. Count frequency of each word\n3. Return frequency map",
+    "explanation": "Python's split() with no argument splits on any whitespace. Java's split() needs explicit delimiter. Both use hash map for counting — just different method names."
+  },
+  {
+    "id": 32, "title": "Reverse Words in String", "difficulty": "Medium", "topic": "Strings",
+    "python_solution": "def reverse_words(s):\n    return ' '.join(s.split()[::-1])",
+    "java_solution": "public String reverseWords(String s) {\n    String[] words = s.trim().split(\"\\\\s+\");\n    StringBuilder sb = new StringBuilder();\n    for (int i=words.length-1; i>=0; i--) {\n        sb.append(words[i]);\n        if (i>0) sb.append(' ');\n    }\n    return sb.toString();\n}",
+    "differences": ["Python one-liner with split, reverse, join", "Java needs regex \\\\s+ for multiple spaces", "Python ' '.join() vs Java manual StringBuilder"],
+    "pseudocode": "1. Split into words\n2. Reverse word order\n3. Join with spaces",
+    "explanation": "Python's combination of split(), [::-1], and join() solves it in one line. Java needs regex for multiple whitespace, explicit loop for joining. Classic Python conciseness."
+  },
+  {
+    "id": 33, "title": "Compress String", "difficulty": "Easy", "topic": "Strings",
+    "python_solution": "def compress(s):\n    result = ''\n    i = 0\n    while i < len(s):\n        char = s[i]\n        count = 0\n        while i < len(s) and s[i] == char:\n            count += 1; i += 1\n        result += char + (str(count) if count > 1 else '')\n    return result if len(result) < len(s) else s",
+    "java_solution": "public String compress(String s) {\n    StringBuilder sb = new StringBuilder();\n    int i=0;\n    while (i<s.length()) {\n        char c=s.charAt(i);\n        int count=0;\n        while (i<s.length()&&s.charAt(i)==c){count++;i++;}\n        sb.append(c);\n        if (count>1) sb.append(count);\n    }\n    String result=sb.toString();\n    return result.length()<s.length() ? result : s;\n}",
+    "differences": ["Python string concatenation vs Java StringBuilder", "Python ternary: value if condition else other", "Java ternary: condition ? value : other"],
+    "pseudocode": "1. Count consecutive identical characters\n2. Append char + count if count > 1\n3. Return compressed if shorter",
+    "explanation": "Run-length encoding. Python's ternary reads naturally. Java's ternary uses ? : syntax. Both compress only if it makes the string shorter."
+  },
+  {
+    "id": 34, "title": "Decode String", "difficulty": "Medium", "topic": "Strings",
+    "python_solution": "def decode_string(s):\n    stack = []\n    curr_str = ''\n    curr_num = 0\n    for c in s:\n        if c.isdigit():\n            curr_num = curr_num*10 + int(c)\n        elif c == '[':\n            stack.append((curr_str, curr_num))\n            curr_str = ''; curr_num = 0\n        elif c == ']':\n            prev_str, num = stack.pop()\n            curr_str = prev_str + num * curr_str\n        else:\n            curr_str += c\n    return curr_str",
+    "java_solution": "public String decodeString(String s) {\n    Stack<Integer> numStack=new Stack<>();\n    Stack<String> strStack=new Stack<>();\n    String curr=\"\"; int num=0;\n    for (char c : s.toCharArray()) {\n        if (Character.isDigit(c)) num=num*10+(c-'0');\n        else if (c=='['){strStack.push(curr);numStack.push(num);curr=\"\";num=0;}\n        else if (c==']'){int n=numStack.pop();String prev=strStack.pop();curr=prev+curr.repeat(n);}\n        else curr+=c;\n    }\n    return curr;\n}",
+    "differences": ["Python tuple stack vs Java two separate stacks", "Python num * curr_str repeats string, Java uses curr.repeat(n)", "Java String.repeat() available since Java 11"],
+    "pseudocode": "1. Use stack to handle nesting\n2. On '[': save current state\n3. On ']': pop state and repeat string\n4. Return decoded string",
+    "explanation": "Python can store tuples in a stack — (string, number) together. Java uses two separate stacks. Python's string multiplication (num * string) vs Java's String.repeat() method."
+  },
+  {
+    "id": 35, "title": "Longest Palindromic Substring", "difficulty": "Medium", "topic": "Strings",
+    "python_solution": "def longest_palindrome(s):\n    result = ''\n    for i in range(len(s)):\n        for odd, even in [(s[i:], ''), (s[i:], s[i+1:])]:\n            l, r = 0, 0\n            while l >= 0 and r < len(s) and s[i-l] == s[i+r+len(even)//len(even+' ')-1]:\n                result = max(result, s[i-l:i+r+1], key=len); l+=1; r+=1\n    return result",
+    "java_solution": "public String longestPalindrome(String s) {\n    String result=\"\";\n    for (int i=0;i<s.length();i++) {\n        String odd=expand(s,i,i), even=expand(s,i,i+1);\n        if (odd.length()>result.length()) result=odd;\n        if (even.length()>result.length()) result=even;\n    }\n    return result;\n}\nString expand(String s, int l, int r) {\n    while(l>=0&&r<s.length()&&s.charAt(l)==s.charAt(r)){l--;r++;}\n    return s.substring(l+1,r);\n}",
+    "differences": ["Java uses helper method for expansion, Python inline", "Java substring() vs Python slicing s[l:r]", "Expand-around-center is identical concept"],
+    "pseudocode": "1. For each center position:\n2.   Expand outward while characters match\n3.   Check both odd and even length palindromes\n4.   Track longest found",
+    "explanation": "Expand-around-center approach. Java's helper method makes it cleaner. Python's slicing s[l:r] vs Java's substring(l,r). Both check odd and even length palindromes."
+  },
+  {
+    "id": 36, "title": "FizzBuzz", "difficulty": "Easy", "topic": "Loops",
+    "python_solution": "def fizzbuzz(n):\n    for i in range(1, n+1):\n        if i%3==0 and i%5==0: print('FizzBuzz')\n        elif i%3==0: print('Fizz')\n        elif i%5==0: print('Buzz')\n        else: print(i)",
+    "java_solution": "public void fizzBuzz(int n) {\n    for (int i=1;i<=n;i++) {\n        if (i%3==0&&i%5==0) System.out.println(\"FizzBuzz\");\n        else if (i%3==0) System.out.println(\"Fizz\");\n        else if (i%5==0) System.out.println(\"Buzz\");\n        else System.out.println(i);\n    }\n}",
+    "differences": ["Python 'and' vs Java '&&'", "Python print() vs Java System.out.println()", "Python range(1,n+1) vs Java i<=n"],
+    "pseudocode": "1. Loop 1 to n\n2. Check divisibility by 3 and 5\n3. Print appropriate string",
+    "explanation": "Logic is identical. Python uses 'and' for boolean operations, Java uses '&&'. Python's print() is simple, Java's System.out.println() is verbose."
+  },
+  {
+    "id": 37, "title": "Sum of Digits", "difficulty": "Easy", "topic": "Loops",
+    "python_solution": "def sum_of_digits(n):\n    total = 0\n    while n > 0:\n        total += n % 10\n        n //= 10\n    return total",
+    "java_solution": "public int sumOfDigits(int n) {\n    int total = 0;\n    while (n>0){total+=n%10; n/=10;}\n    return total;\n}",
+    "differences": ["Python //= for integer division assignment, Java /=", "Java /= does integer division for int types automatically", "Logic is nearly identical"],
+    "pseudocode": "1. While n > 0:\n2.   Add last digit (n%10)\n3.   Remove last digit (n//10)\n4. Return total",
+    "explanation": "One of the closest-looking Python-Java pairs. Python uses //= for integer division assignment. Java's /= does integer division automatically when both values are int type."
+  },
+  {
+    "id": 38, "title": "Climbing Stairs", "difficulty": "Easy", "topic": "Loops",
+    "python_solution": "def climb_stairs(n):\n    if n <= 2: return n\n    a, b = 1, 2\n    for _ in range(3, n+1):\n        a, b = b, a+b\n    return b",
+    "java_solution": "public int climbStairs(int n) {\n    if (n<=2) return n;\n    int a=1, b=2;\n    for (int i=3;i<=n;i++){int t=a+b;a=b;b=t;}\n    return b;\n}",
+    "differences": ["Python simultaneous swap: a, b = b, a+b", "Java needs temp variable for swap", "Python _ as throwaway variable"],
+    "pseudocode": "1. Base case: n<=2 → return n\n2. Iterate building Fibonacci-like sequence\n3. Return last value",
+    "explanation": "Essentially Fibonacci. Python's simultaneous assignment avoids temp variable. Java needs temp. Python's _ signals unused loop variable — a clear convention."
+  },
+  {
+    "id": 39, "title": "Happy Number", "difficulty": "Easy", "topic": "Loops",
+    "python_solution": "def is_happy(n):\n    seen = set()\n    while n != 1:\n        if n in seen: return False\n        seen.add(n)\n        n = sum(int(d)**2 for d in str(n))\n    return True",
+    "java_solution": "public boolean isHappy(int n) {\n    Set<Integer> seen=new HashSet<>();\n    while(n!=1){\n        if(seen.contains(n)) return false;\n        seen.add(n);\n        int sum=0;\n        while(n>0){int d=n%10;sum+=d*d;n/=10;}\n        n=sum;\n    }\n    return true;\n}",
+    "differences": ["Python: sum(int(d)**2 for d in str(n)) one elegant line", "Java needs nested loop to sum digit squares", "Python converts number to string to get digits"],
+    "pseudocode": "1. Track seen numbers\n2. While n != 1:\n3.   If seen → cycle → not happy\n4.   Sum of squared digits\n5. Return true",
+    "explanation": "Python's generator sum(int(d)**2 for d in str(n)) is powerful — converting number to string to iterate digits. Java takes mathematical approach with nested while loop."
+  },
+  {
+    "id": 40, "title": "Power of Two", "difficulty": "Easy", "topic": "Loops",
+    "python_solution": "def is_power_of_two(n):\n    if n <= 0: return False\n    while n % 2 == 0: n //= 2\n    return n == 1",
+    "java_solution": "public boolean isPowerOfTwo(int n) {\n    if (n<=0) return false;\n    while (n%2==0) n/=2;\n    return n==1;\n}",
+    "differences": ["Python True/False vs Java true/false (capitalization)", "Python //= vs Java /=", "Logic is identical"],
+    "pseudocode": "1. If n <= 0 → false\n2. Divide by 2 while even\n3. If result is 1 → was power of 2",
+    "explanation": "Boolean values are capitalized in Python (True/False) but lowercase in Java (true/false). Most common syntax mistake when switching between them. Algorithm is identical."
+  },
+  {
+    "id": 41, "title": "Print Multiplication Table", "difficulty": "Easy", "topic": "Loops",
+    "python_solution": "def multiplication_table(n):\n    for i in range(1, n+1):\n        for j in range(1, n+1):\n            print(f'{i*j:4}', end='')\n        print()",
+    "java_solution": "public void multiplicationTable(int n) {\n    for(int i=1;i<=n;i++){\n        for(int j=1;j<=n;j++) System.out.printf(\"%4d\",i*j);\n        System.out.println();\n    }\n}",
+    "differences": ["Python f-string {:4} vs Java printf %4d", "Python print(end='') vs Java printf (no newline by default)", "Nested loops identical"],
+    "pseudocode": "1. For each row i:\n2.   For each column j:\n3.     Print i*j formatted\n4.   Print newline",
+    "explanation": "Nested loops work identically. Python f-strings use {:4} format spec. Java uses printf with %4d. Python print(end='') suppresses newline. Both produce same output."
+  },
+  {
+    "id": 42, "title": "Reverse Digits", "difficulty": "Easy", "topic": "Loops",
+    "python_solution": "def reverse_digits(n):\n    sign = -1 if n < 0 else 1\n    n = abs(n)\n    return sign * int(str(n)[::-1])",
+    "java_solution": "public int reverseDigits(int n) {\n    int sign = n<0 ? -1 : 1;\n    n = Math.abs(n);\n    long rev=0;\n    while(n>0){rev=rev*10+n%10;n/=10;}\n    return (int)(sign*rev);\n}",
+    "differences": ["Python converts to string and slices", "Java uses math to extract and rebuild digits", "Python ternary: x if cond else y vs Java: cond ? x : y"],
+    "pseudocode": "1. Save sign\n2. Work with absolute value\n3. Reverse digits\n4. Return with sign",
+    "explanation": "Python's string reversal is trivial with [::-1]. Java takes mathematical approach. Python ternary reads naturally: 'value if condition else other'. Java uses ? : syntax."
+  },
+  {
+    "id": 43, "title": "Number of Steps to Zero", "difficulty": "Easy", "topic": "Loops",
+    "python_solution": "def number_of_steps(num):\n    steps = 0\n    while num > 0:\n        num //= 2 if num%2==0 else num-1; steps+=1\n        if num%2==0: num//=2\n        else: num-=1\n        steps+=1\n    return steps",
+    "java_solution": "public int numberOfSteps(int num) {\n    int steps=0;\n    while(num>0){\n        if(num%2==0) num/=2;\n        else num-=1;\n        steps++;\n    }\n    return steps;\n}",
+    "differences": ["Python steps += 1 vs Java steps++", "Python //= vs Java /=", "Logic is identical"],
+    "pseudocode": "1. While num > 0:\n2.   If even → divide by 2\n3.   If odd → subtract 1\n4.   Increment steps",
+    "explanation": "++ increment operator doesn't exist in Python — use += 1. Java's ++ is common shorthand. Python uses //= for integer division assignment. Logic is identical."
+  },
+  {
+    "id": 44, "title": "Count Primes", "difficulty": "Medium", "topic": "Loops",
+    "python_solution": "def count_primes(n):\n    if n < 2: return 0\n    sieve = [True] * n\n    sieve[0] = sieve[1] = False\n    for i in range(2, int(n**0.5)+1):\n        if sieve[i]:\n            for j in range(i*i, n, i): sieve[j] = False\n    return sum(sieve)",
+    "java_solution": "public int countPrimes(int n) {\n    if(n<2) return 0;\n    boolean[] sieve=new boolean[n];\n    Arrays.fill(sieve,true);\n    sieve[0]=sieve[1]=false;\n    for(int i=2;i*i<n;i++) if(sieve[i]) for(int j=i*i;j<n;j+=i) sieve[j]=false;\n    int count=0;\n    for(boolean b:sieve) if(b) count++;\n    return count;\n}",
+    "differences": ["Python [True]*n vs Java Arrays.fill()", "Python sum(sieve) counts Trues, Java needs explicit loop", "Python range with step vs Java j+=i"],
+    "pseudocode": "1. Create boolean array\n2. Mark 0,1 not prime\n3. For each prime, mark multiples\n4. Count remaining trues",
+    "explanation": "Sieve of Eratosthenes. Python's [True]*n and sum() are concise. Java needs Arrays.fill() and explicit counting loop. Python's range(i*i, n, i) with step is cleaner than Java's j+=i."
+  },
+  {
+    "id": 45, "title": "GCD of Two Numbers", "difficulty": "Easy", "topic": "Loops",
+    "python_solution": "def gcd(a, b):\n    while b:\n        a, b = b, a % b\n    return a",
+    "java_solution": "public int gcd(int a, int b) {\n    while(b!=0){int t=a%b;a=b;b=t;}\n    return a;\n}",
+    "differences": ["Python 'while b' uses truthiness (0 is falsy)", "Java needs explicit b != 0", "Python simultaneous swap vs Java temp variable"],
+    "pseudocode": "1. While b != 0:\n2.   temp = a % b\n3.   a = b, b = temp\n4. Return a",
+    "explanation": "Euclid's algorithm. Python's 'while b' works — 0 is falsy in Python. Java needs explicit comparison. Python's simultaneous assignment avoids temp variable."
+  },
+  {
+    "id": 46, "title": "Fibonacci", "difficulty": "Easy", "topic": "Math",
+    "python_solution": "def fibonacci(n):\n    if n <= 1: return n\n    a, b = 0, 1\n    for _ in range(2, n+1):\n        a, b = b, a+b\n    return b",
+    "java_solution": "public int fibonacci(int n) {\n    if(n<=1) return n;\n    int a=0, b=1;\n    for(int i=2;i<=n;i++){int t=a+b;a=b;b=t;}\n    return b;\n}",
+    "differences": ["Python a,b = b,a+b simultaneous swap", "Java needs temp variable", "Python range vs Java for loop"],
+    "pseudocode": "1. Base: n<=1 → return n\n2. Iterate building sequence\n3. Return nth value",
+    "explanation": "Python's simultaneous assignment (a,b = b,a+b) is elegant — both sides evaluate before assignment. Java needs temp variable. One of Python's most celebrated features."
+  },
+  {
+    "id": 47, "title": "Is Prime", "difficulty": "Easy", "topic": "Math",
+    "python_solution": "def is_prime(n):\n    if n < 2: return False\n    for i in range(2, int(n**0.5)+1):\n        if n % i == 0: return False\n    return True",
+    "java_solution": "public boolean isPrime(int n) {\n    if(n<2) return false;\n    for(int i=2;i<=(int)Math.sqrt(n);i++)\n        if(n%i==0) return false;\n    return true;\n}",
+    "differences": ["Python n**0.5 vs Java Math.sqrt(n)", "Python True/False vs Java true/false", "Python ** operator vs Java Math class"],
+    "pseudocode": "1. If n < 2 → not prime\n2. Check divisors up to sqrt(n)\n3. If any found → not prime",
+    "explanation": "Square root optimization identical in both. Python ** computes powers directly. Java uses Math.sqrt(). Boolean capitalization difference: True vs true."
+  },
+  {
+    "id": 48, "title": "Power Function", "difficulty": "Medium", "topic": "Math",
+    "python_solution": "def my_pow(x, n):\n    if n < 0: x, n = 1/x, -n\n    result = 1\n    while n:\n        if n%2==1: result *= x\n        x *= x; n //= 2\n    return result",
+    "java_solution": "public double myPow(double x, int n) {\n    if(n<0){x=1/x;n=-n;}\n    double result=1;\n    while(n!=0){\n        if(n%2==1) result*=x;\n        x*=x; n/=2;\n    }\n    return result;\n}",
+    "differences": ["Python 'while n' vs Java 'while(n!=0)'", "Python simultaneous assignment for negative n", "Java needs double type declaration"],
+    "pseudocode": "1. Handle negative exponent\n2. Binary exponentiation:\n3.   If bit set → multiply result\n4.   Square x, halve n",
+    "explanation": "Fast exponentiation. Python's 'while n' works because 0 is falsy. Java needs explicit != 0. Both achieve O(log n) time complexity."
+  },
+  {
+    "id": 49, "title": "Integer to Roman", "difficulty": "Medium", "topic": "Math",
+    "python_solution": "def int_to_roman(num):\n    vals = [1000,900,500,400,100,90,50,40,10,9,5,4,1]\n    syms = ['M','CM','D','CD','C','XC','L','XL','X','IX','V','IV','I']\n    result = ''\n    for i, v in enumerate(vals):\n        while num >= v:\n            result += syms[i]; num -= v\n    return result",
+    "java_solution": "public String intToRoman(int num) {\n    int[] vals={1000,900,500,400,100,90,50,40,10,9,5,4,1};\n    String[] syms={\"M\",\"CM\",\"D\",\"CD\",\"C\",\"XC\",\"L\",\"XL\",\"X\",\"IX\",\"V\",\"IV\",\"I\"};\n    StringBuilder sb=new StringBuilder();\n    for(int i=0;i<vals.length;i++)\n        while(num>=vals[i]){sb.append(syms[i]);num-=vals[i];}\n    return sb.toString();\n}",
+    "differences": ["Python enumerate() vs Java manual index", "Python string += vs Java StringBuilder.append()", "Python list literals vs Java array literals {}"],
+    "pseudocode": "1. Define value-symbol pairs\n2. For each value, while num >= value:\n3.   Append symbol, subtract value\n4. Return result",
+    "explanation": "Greedy algorithm. Python enumerate() avoids manual index. Java uses StringBuilder for efficiency — repeated += in Java creates many intermediate String objects."
+  },
+  {
+    "id": 50, "title": "Roman to Integer", "difficulty": "Easy", "topic": "Math",
+    "python_solution": "def roman_to_int(s):\n    vals = {'I':1,'V':5,'X':10,'L':50,'C':100,'D':500,'M':1000}\n    result = 0\n    for i in range(len(s)):\n        if i+1<len(s) and vals[s[i]]<vals[s[i+1]]:\n            result -= vals[s[i]]\n        else:\n            result += vals[s[i]]\n    return result",
+    "java_solution": "public int romanToInt(String s) {\n    Map<Character,Integer> vals=new HashMap<>();\n    vals.put('I',1);vals.put('V',5);vals.put('X',10);vals.put('L',50);vals.put('C',100);vals.put('D',500);vals.put('M',1000);\n    int result=0;\n    for(int i=0;i<s.length();i++){\n        if(i+1<s.length()&&vals.get(s.charAt(i))<vals.get(s.charAt(i+1)))\n            result-=vals.get(s.charAt(i));\n        else result+=vals.get(s.charAt(i));\n    }\n    return result;\n}",
+    "differences": ["Python dict literal {} vs Java multiple put() calls", "Python s[i] vs Java s.charAt(i)", "Python initialization dramatically more concise"],
+    "pseudocode": "1. Map each symbol to value\n2. For each character:\n3.   If next is larger → subtract\n4.   Otherwise → add",
+    "explanation": "Python dict literal initialization is dramatically cleaner than Java's HashMap with separate put() calls. Python s[i] vs Java s.charAt(i) for character access."
+  },
+  {
+    "id": 51, "title": "Pascal's Triangle", "difficulty": "Easy", "topic": "Math",
+    "python_solution": "def generate(num_rows):\n    triangle = []\n    for i in range(num_rows):\n        row = [1] * (i+1)\n        for j in range(1, i):\n            row[j] = triangle[i-1][j-1] + triangle[i-1][j]\n        triangle.append(row)\n    return triangle",
+    "java_solution": "public List<List<Integer>> generate(int numRows) {\n    List<List<Integer>> tri=new ArrayList<>();\n    for(int i=0;i<numRows;i++){\n        List<Integer> row=new ArrayList<>(Collections.nCopies(i+1,1));\n        for(int j=1;j<i;j++) row.set(j,tri.get(i-1).get(j-1)+tri.get(i-1).get(j));\n        tri.add(row);\n    }\n    return tri;\n}",
+    "differences": ["Python [1]*(i+1) vs Java Collections.nCopies()", "Python row[j]= vs Java row.set(j,val)", "Java generic types add verbosity"],
+    "pseudocode": "1. For each row:\n2.   Initialize with 1s\n3.   Fill middle from previous row\n4.   Add to triangle",
+    "explanation": "Python's [1]*(i+1) is much cleaner than Java's Collections.nCopies(). Java's List requires set() to modify, Python uses direct indexing. Generic types add Java verbosity."
+  },
+  {
+    "id": 52, "title": "Count Primes Sieve", "difficulty": "Medium", "topic": "Math",
+    "python_solution": "def count_primes_sieve(n):\n    if n < 2: return 0\n    is_prime = [True] * n\n    is_prime[0] = is_prime[1] = False\n    for i in range(2, int(n**0.5)+1):\n        if is_prime[i]:\n            for j in range(i*i, n, i):\n                is_prime[j] = False\n    return sum(is_prime)",
+    "java_solution": "public int countPrimesSieve(int n) {\n    if(n<2) return 0;\n    boolean[] isPrime=new boolean[n];\n    Arrays.fill(isPrime,true);\n    isPrime[0]=isPrime[1]=false;\n    for(int i=2;(long)i*i<n;i++) if(isPrime[i]) for(int j=i*i;j<n;j+=i) isPrime[j]=false;\n    int count=0; for(boolean b:isPrime) if(b) count++;\n    return count;\n}",
+    "differences": ["Python sum(is_prime) counts True values", "Java (long)i*i avoids overflow", "Python [True]*n vs Java Arrays.fill()"],
+    "pseudocode": "1. Sieve of Eratosthenes\n2. Mark composites\n3. Count primes",
+    "explanation": "Sieve of Eratosthenes. Python's sum() on boolean list counts True values — elegant. Java needs explicit loop. Java casts to long to prevent integer overflow in i*i."
+  },
+  {
+    "id": 53, "title": "Sqrt Binary Search", "difficulty": "Easy", "topic": "Math",
+    "python_solution": "def my_sqrt(x):\n    if x < 2: return x\n    left, right = 1, x//2\n    while left <= right:\n        mid = (left+right)//2\n        if mid*mid == x: return mid\n        elif mid*mid < x: left = mid+1\n        else: right = mid-1\n    return right",
+    "java_solution": "public int mySqrt(int x) {\n    if(x<2) return x;\n    int left=1, right=x/2;\n    while(left<=right){\n        int mid=(left+right)/2;\n        if((long)mid*mid==x) return mid;\n        else if((long)mid*mid<x) left=mid+1;\n        else right=mid-1;\n    }\n    return right;\n}",
+    "differences": ["Java needs (long) cast to prevent overflow", "Python handles large integers natively", "Python // vs Java / for integer division"],
+    "pseudocode": "1. Binary search between 1 and x/2\n2. If mid*mid matches → found\n3. Adjust left/right accordingly\n4. Return right (floor sqrt)",
+    "explanation": "Binary search for sqrt. Java needs (long) cast since mid*mid can overflow int. Python handles arbitrarily large integers natively — real advantage here."
+  },
+  {
+    "id": 54, "title": "Reverse Integer", "difficulty": "Medium", "topic": "Math",
+    "python_solution": "def reverse(x):\n    sign = -1 if x<0 else 1\n    x = abs(x)\n    rev = int(str(x)[::-1])\n    result = sign * rev\n    return result if -2**31 <= result <= 2**31-1 else 0",
+    "java_solution": "public int reverse(int x) {\n    long rev=0;\n    while(x!=0){rev=rev*10+x%10;x/=10;}\n    return (rev>Integer.MAX_VALUE||rev<Integer.MIN_VALUE)?0:(int)rev;\n}",
+    "differences": ["Python converts to string and slices for reversal", "Java uses math to extract digits", "Python range check with chained comparison: -2**31 <= result <= 2**31-1"],
+    "pseudocode": "1. Extract digits and reverse\n2. Check overflow bounds\n3. Return 0 if overflow",
+    "explanation": "Python's chained comparison (-2**31 <= result <= 2**31-1) is a Pythonic feature Java doesn't have. Python's string reversal is elegant. Java takes mathematical approach."
+  },
+  {
+    "id": 55, "title": "Bubble Sort", "difficulty": "Easy", "topic": "Sorting",
+    "python_solution": "def bubble_sort(arr):\n    n = len(arr)\n    for i in range(n):\n        for j in range(0, n-i-1):\n            if arr[j] > arr[j+1]:\n                arr[j], arr[j+1] = arr[j+1], arr[j]\n    return arr",
+    "java_solution": "public int[] bubbleSort(int[] arr) {\n    int n=arr.length;\n    for(int i=0;i<n;i++)\n        for(int j=0;j<n-i-1;j++)\n            if(arr[j]>arr[j+1]){int t=arr[j];arr[j]=arr[j+1];arr[j+1]=t;}\n    return arr;\n}",
+    "differences": ["Python simultaneous swap: arr[j],arr[j+1]=arr[j+1],arr[j]", "Java needs temp variable for swap", "Python len() vs Java .length"],
+    "pseudocode": "1. For each pass:\n2.   Compare adjacent elements\n3.   Swap if out of order\n4.   Largest bubbles to end",
+    "explanation": "Classic swap difference. Python's simultaneous assignment (a,b = b,a) eliminates temp variable. Java always needs temp for swaps. Most visible Python advantage in sorting."
+  },
+  {
+    "id": 56, "title": "Selection Sort", "difficulty": "Easy", "topic": "Sorting",
+    "python_solution": "def selection_sort(arr):\n    n = len(arr)\n    for i in range(n):\n        min_idx = i\n        for j in range(i+1, n):\n            if arr[j] < arr[min_idx]: min_idx = j\n        arr[i], arr[min_idx] = arr[min_idx], arr[i]\n    return arr",
+    "java_solution": "public int[] selectionSort(int[] arr) {\n    int n=arr.length;\n    for(int i=0;i<n;i++){\n        int minIdx=i;\n        for(int j=i+1;j<n;j++) if(arr[j]<arr[minIdx]) minIdx=j;\n        int t=arr[i];arr[i]=arr[minIdx];arr[minIdx]=t;\n    }\n    return arr;\n}",
+    "differences": ["Python snake_case (min_idx) vs Java camelCase (minIdx)", "Python simultaneous swap vs Java temp variable", "Logic is identical"],
+    "pseudocode": "1. For each position:\n2.   Find minimum in remaining\n3.   Swap minimum into position\n4. Array sorted",
+    "explanation": "Naming convention: Python uses snake_case, Java uses camelCase. Python's simultaneous swap vs Java's temp. Both are valid in their respective languages."
+  },
+  {
+    "id": 57, "title": "Insertion Sort", "difficulty": "Easy", "topic": "Sorting",
+    "python_solution": "def insertion_sort(arr):\n    for i in range(1, len(arr)):\n        key = arr[i]\n        j = i-1\n        while j >= 0 and arr[j] > key:\n            arr[j+1] = arr[j]; j -= 1\n        arr[j+1] = key\n    return arr",
+    "java_solution": "public int[] insertionSort(int[] arr) {\n    for(int i=1;i<arr.length;i++){\n        int key=arr[i], j=i-1;\n        while(j>=0&&arr[j]>key){arr[j+1]=arr[j];j--;}\n        arr[j+1]=key;\n    }\n    return arr;\n}",
+    "differences": ["Python j -= 1 vs Java j--", "Python range(1, len(arr)) vs Java i=1; i<arr.length", "Logic is nearly identical"],
+    "pseudocode": "1. For each element from index 1:\n2.   Save as key\n3.   Shift larger elements right\n4.   Insert key in correct position",
+    "explanation": "Most similar-looking algorithm in Python and Java. Main difference is j-- vs j-=1. The logic is virtually identical — great for seeing both languages side by side."
+  },
+  {
+    "id": 58, "title": "Merge Sort", "difficulty": "Medium", "topic": "Sorting",
+    "python_solution": "def merge_sort(arr):\n    if len(arr) <= 1: return arr\n    mid = len(arr)//2\n    left = merge_sort(arr[:mid])\n    right = merge_sort(arr[mid:])\n    result = []\n    i = j = 0\n    while i<len(left) and j<len(right):\n        if left[i]<=right[j]: result.append(left[i]); i+=1\n        else: result.append(right[j]); j+=1\n    return result + left[i:] + right[j:]",
+    "java_solution": "public int[] mergeSort(int[] arr) {\n    if(arr.length<=1) return arr;\n    int mid=arr.length/2;\n    int[] left=mergeSort(Arrays.copyOfRange(arr,0,mid));\n    int[] right=mergeSort(Arrays.copyOfRange(arr,mid,arr.length));\n    int[] res=new int[arr.length];\n    int i=0,j=0,k=0;\n    while(i<left.length&&j<right.length) res[k++]=left[i]<=right[j]?left[i++]:right[j++];\n    while(i<left.length) res[k++]=left[i++];\n    while(j<right.length) res[k++]=right[j++];\n    return res;\n}",
+    "differences": ["Python slicing arr[:mid] vs Java Arrays.copyOfRange()", "Python result+left[i:]+right[j:] vs Java while loops", "Java pre-allocates result array"],
+    "pseudocode": "1. Split in half recursively\n2. Merge two sorted halves\n3. Return merged result",
+    "explanation": "Python's slicing makes splitting trivial. Java needs Arrays.copyOfRange(). Python's list concatenation with + handles leftover elements. Java needs explicit while loops."
+  },
+  {
+    "id": 59, "title": "Quick Sort", "difficulty": "Medium", "topic": "Sorting",
+    "python_solution": "def quick_sort(arr):\n    if len(arr) <= 1: return arr\n    pivot = arr[len(arr)//2]\n    left = [x for x in arr if x < pivot]\n    mid = [x for x in arr if x == pivot]\n    right = [x for x in arr if x > pivot]\n    return quick_sort(left) + mid + quick_sort(right)",
+    "java_solution": "public void quickSort(int[] arr, int low, int high) {\n    if(low<high){\n        int p=partition(arr,low,high);\n        quickSort(arr,low,p-1);\n        quickSort(arr,p+1,high);\n    }\n}\nint partition(int[] arr, int l, int h) {\n    int pivot=arr[h],i=l-1;\n    for(int j=l;j<h;j++) if(arr[j]<=pivot){i++;int t=arr[i];arr[i]=arr[j];arr[j]=t;}\n    int t=arr[i+1];arr[i+1]=arr[h];arr[h]=t;\n    return i+1;\n}",
+    "differences": ["Python list comprehensions for clean partition", "Java uses in-place partition for memory efficiency", "Python creates new lists, Java modifies in place"],
+    "pseudocode": "1. Choose pivot\n2. Partition: smaller left, equal middle, larger right\n3. Recursively sort left and right\n4. Combine",
+    "explanation": "Python's functional approach with list comprehensions is readable but uses extra memory. Java's in-place partition is more efficient. Python's + for combining is elegant."
+  },
+  {
+    "id": 60, "title": "Kth Largest Element", "difficulty": "Medium", "topic": "Sorting",
+    "python_solution": "def find_kth_largest(nums, k):\n    nums.sort(reverse=True)\n    return nums[k-1]",
+    "java_solution": "public int findKthLargest(int[] nums, int k) {\n    Arrays.sort(nums);\n    return nums[nums.length-k];\n}",
+    "differences": ["Python sort(reverse=True) for descending", "Java sorts ascending, index from back", "Python named parameter vs Java index arithmetic"],
+    "pseudocode": "1. Sort array\n2. Return kth element from end",
+    "explanation": "Python's reverse=True parameter sorts descending. Java sorts ascending and accesses from back. Python's named parameters are more readable than Java's index arithmetic."
+  }
+]
