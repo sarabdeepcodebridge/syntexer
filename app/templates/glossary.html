@@ -1,64 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Glossary — Syntaxer</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .glossary-row {
-            border: 1px solid #eee;
-            border-radius: 12px;
-            padding: 16px 20px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        .glossary-row:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-        }
-        .lang-badge {
-            font-size: 12px;
-            font-family: monospace;
-            padding: 4px 12px;
-            border-radius: 8px;
-            min-width: 140px;
-            text-align: center;
-        }
-        .python { background: #E6F1FB; color: #0C447C; }
-        .java { background: #FAEEDA; color: #633806; }
-        .arrow { color: #aaa; font-size: 18px; }
-        .example { font-size: 12px; color: #888; flex: 1; }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Glossary — Syntaxer{% endblock %}
 
-    <nav class="navbar navbar-dark bg-dark px-4 py-3">
-        <a class="navbar-brand fw-bold fs-4" href="/">Syntaxer</a>
-        <div class="d-flex gap-3">
-            <a href="/" class="text-white text-decoration-none small">Home</a>
-            <a href="/glossary" class="text-white text-decoration-none small">Glossary</a>
-        </div>
-    </nav>
+{% block extra_css %}
+<style>
+.glossary-header { padding: 48px 0 32px; }
+.glossary-row { display: flex; align-items: center; gap: 16px; padding: 14px 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px; transition: all 0.2s; }
+.glossary-row:hover { border-color: var(--border-hover); background: var(--bg-hover); }
+.lang-badge { font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 5px 14px; border-radius: 8px; min-width: 160px; text-align: center; }
+.py-badge { background: rgba(59, 130, 246, 0.1); color: #7eb8f7; border: 1px solid rgba(59, 130, 246, 0.2); }
+.java-badge { background: rgba(249, 115, 22, 0.1); color: #f97316; border: 1px solid rgba(249, 115, 22, 0.2); }
+.arrow-badge { color: var(--text-muted); font-size: 16px; }
+.example-text { font-size: 12px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; flex: 1; }
+</style>
+{% endblock %}
 
-    <div class="container py-5">
-        <h2 class="fw-bold mb-1">Python → Java Glossary</h2>
-        <p class="text-muted mb-4">Quick reference for the most common syntax differences.</p>
+{% block content %}
+<div class="container">
+    <div class="glossary-header">
+        <a href="/" class="back-btn">← Back to Home</a>
+        <h2 style="font-size:32px;font-weight:700;letter-spacing:-0.5px;margin-bottom:8px;">Python → Java Glossary</h2>
+        <p style="color:var(--text-secondary);font-size:15px;margin-bottom:32px;">Quick reference for the most common syntax translations.</p>
+
+        <p class="section-title">{{ glossary|length }} terms</p>
 
         {% for item in glossary %}
         <div class="glossary-row">
-            <span class="lang-badge python">{{ item.python }}</span>
-            <span class="arrow">→</span>
-            <span class="lang-badge java">{{ item.java }}</span>
-            <span class="example">{{ item.example }}</span>
+            <span class="lang-badge py-badge">{{ item.python }}</span>
+            <span class="arrow-badge">→</span>
+            <span class="lang-badge java-badge">{{ item.java }}</span>
+            <span class="example-text">{{ item.example }}</span>
         </div>
         {% endfor %}
     </div>
-
-    <footer class="bg-dark text-center text-secondary py-4 small">
-        © 2026 Syntaxer — 17719019 Canada Inc. · Built in Canada 🍁
-    </footer>
-
-</body>
-</html>
+</div>
+{% endblock %}

@@ -1,71 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ topic }} — Syntaxer</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .problem-card {
-            border: 1px solid #eee;
-            border-radius: 12px;
-            padding: 24px;
-            transition: transform 0.2s;
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
-        .problem-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-            color: inherit;
-        }
-        .difficulty-badge {
-            font-size: 11px;
-            padding: 3px 10px;
-            border-radius: 20px;
-        }
-        .easy { background: #E1F5EE; color: #085041; }
-        .medium { background: #FAEEDA; color: #633806; }
-        .hard { background: #FAECE7; color: #712B13; }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}{{ topic }} Problems — Syntaxer{% endblock %}
 
-    <nav class="navbar navbar-dark bg-dark px-4 py-3">
-        <a class="navbar-brand fw-bold fs-4" href="/">Syntaxer</a>
-        <div class="d-flex gap-3">
-            <a href="/" class="text-white text-decoration-none small">Home</a>
-            <a href="/glossary" class="text-white text-decoration-none small">Glossary</a>
+{% block extra_css %}
+<style>
+.problem-card { padding: 20px 24px; }
+.problem-number { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; }
+.problem-title { font-size: 17px; font-weight: 600; margin-bottom: 10px; }
+.problem-hint { font-size: 13px; color: var(--text-secondary); }
+.problem-arrow { float: right; color: var(--text-muted); transition: all 0.2s; }
+.card-base:hover .problem-arrow { color: var(--accent); transform: translateX(4px); }
+.topic-header { padding: 48px 0 32px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="topic-header">
+        <a href="/" class="back-btn">← Back to Topics</a>
+        <div class="d-flex align-items-center gap-3 mb-2">
+            <h2 style="font-size:32px;font-weight:700;letter-spacing:-0.5px;margin:0;">{{ topic }}</h2>
+            <span class="pill badge-topic">{{ problems|length }} problems</span>
         </div>
-    </nav>
-
-    <div class="container py-5">
-        <a href="/" class="text-decoration-none text-secondary small">← Back to Topics</a>
-
-        <h2 class="fw-bold mt-3 mb-1">{{ topic }}</h2>
-        <p class="text-muted mb-4">{{ problems|length }} problem{% if problems|length != 1 %}s{% endif %}</p>
-
-        <div class="row">
-            {% for problem in problems %}
-            <div class="col-md-4 mb-4">
-                <a href="/problem/{{ problem.id }}" class="problem-card">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <h5 class="fw-bold mb-0">{{ problem.title }}</h5>
-                        <span class="difficulty-badge {{ problem.difficulty | lower }}">
-                            {{ problem.difficulty }}
-                        </span>
-                    </div>
-                    <p class="text-muted small mb-0">Click to see Python vs Java solution</p>
-                </a>
-            </div>
-            {% endfor %}
-        </div>
+        <p style="color:var(--text-secondary);font-size:15px;margin:0;">Python vs Java — side by side solutions with explanations</p>
     </div>
 
-    <footer class="bg-dark text-center text-secondary py-4 small">
-        © 2026 Syntaxer — 17719019 Canada Inc. · Built in Canada 🍁
-    </footer>
-
-</body>
-</html>
+    <div class="row g-3">
+        {% for problem in problems %}
+        <div class="col-md-6 fade-up">
+            <a href="/problem/{{ problem.id }}" class="card-base problem-card">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div style="flex:1">
+                        <div class="problem-number">#{{ problem.id }}</div>
+                        <div class="problem-title">{{ problem.title }}</div>
+                        <div class="d-flex gap-2">
+                            <span class="pill badge-{{ problem.difficulty | lower }}">{{ problem.difficulty }}</span>
+                        </div>
+                    </div>
+                    <span class="problem-arrow">→</span>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

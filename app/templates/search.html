@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Search — Syntaxer{% endblock %}
+
+{% block extra_css %}
+<style>
+.search-header { padding: 48px 0 32px; }
+.result-card { padding: 20px 24px; margin-bottom: 10px; }
+.result-number { font-size: 12px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-bottom: 4px; }
+.result-title { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+.no-results { text-align: center; padding: 80px 0; color: var(--text-muted); }
+.no-results-icon { font-size: 48px; margin-bottom: 16px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="search-header">
+        <a href="/" class="back-btn">← Back to Home</a>
+        <h2 style="font-size:32px;font-weight:700;letter-spacing:-0.5px;margin-bottom:8px;">
+            {% if query %}Search results for "{{ query }}"{% else %}Search{% endif %}
+        </h2>
+        {% if results %}
+        <p style="color:var(--text-secondary);margin-bottom:32px;">{{ results|length }} result{% if results|length != 1 %}s{% endif %} found</p>
+        {% endif %}
+
+        {% if results %}
+            {% for problem in results %}
+            <a href="/problem/{{ problem.id }}" class="card-base result-card d-block">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="result-number">#{{ problem.id }}</div>
+                        <div class="result-title">{{ problem.title }}</div>
+                        <div class="d-flex gap-2">
+                            <span class="pill badge-{{ problem.difficulty | lower }}">{{ problem.difficulty }}</span>
+                            <span class="pill badge-topic">{{ problem.topic }}</span>
+                        </div>
+                    </div>
+                    <span style="color:var(--text-muted)">→</span>
+                </div>
+            </a>
+            {% endfor %}
+        {% elif query %}
+            <div class="no-results">
+                <div class="no-results-icon">🔍</div>
+                <div style="font-size:18px;font-weight:600;color:var(--text-primary);margin-bottom:8px;">No results found</div>
+                <div>Try searching for a topic like "Arrays", "Strings", or a problem name like "Two Sum"</div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

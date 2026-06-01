@@ -1,84 +1,223 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Syntaxer — Bridge the Language Gap</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .hero {
-            background: #0d0d0d;
-            color: white;
-            padding: 100px 0;
-        }
-        .hero p { color: #aaa; }
-        .category-card {
-            border: 1px solid #eee;
-            border-radius: 12px;
-            padding: 24px;
-            transition: transform 0.2s;
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
-        .category-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-            color: inherit;
-        }
-        .category-icon {
-            font-size: 32px;
-            margin-bottom: 12px;
-        }
-        .problem-count {
-            font-size: 12px;
-            color: #888;
-            margin-top: 4px;
-        }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Syntaxer — Bridge the Language Gap{% endblock %}
 
-    <nav class="navbar navbar-dark bg-dark px-4 py-3">
-        <a class="navbar-brand fw-bold fs-4" href="/">Syntaxer</a>
-        <div class="d-flex gap-3">
-            <a href="/" class="text-white text-decoration-none small">Home</a>
-            <a href="/glossary" class="text-white text-decoration-none small">Glossary</a>
-        </div>
-    </nav>
+{% block extra_css %}
+<style>
+.hero {
+    padding: 80px 0 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
 
-    <div class="hero text-center">
-        <div class="container">
-            <h1 class="display-4 fw-bold mb-4">You know how to code.<br>We teach you the difference.</h1>
-            <p class="lead mb-4">Pick a topic and see Python vs Java side by side.</p>
-            <a href="#topics" class="btn btn-light btn-lg px-5">Browse Topics</a>
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(124, 106, 247, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.hero h1 {
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+}
+
+.hero h1 span { color: var(--accent); }
+
+.hero p {
+    font-size: 18px;
+    color: var(--text-secondary);
+    max-width: 500px;
+    margin: 0 auto 36px;
+    line-height: 1.6;
+}
+
+.hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: white;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.hero-cta:hover {
+    background: var(--accent-hover);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(124, 106, 247, 0.3);
+}
+
+.stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    margin-top: 48px;
+    padding-top: 48px;
+    border-top: 1px solid var(--border);
+}
+
+.stat-item { text-align: center; }
+.stat-number { font-size: 32px; font-weight: 700; color: var(--text-primary); }
+.stat-label { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+
+.category-card {
+    padding: 28px;
+    height: 100%;
+}
+
+.category-icon {
+    font-size: 28px;
+    margin-bottom: 14px;
+    display: block;
+}
+
+.category-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.category-count {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.category-arrow {
+    font-size: 18px;
+    color: var(--text-muted);
+    transition: transform 0.2s;
+    margin-top: 20px;
+    display: block;
+}
+
+.card-base:hover .category-arrow {
+    transform: translateX(4px);
+    color: var(--accent);
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 60px;
+}
+
+.feature-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.feature-icon { font-size: 22px; margin-bottom: 10px; }
+.feature-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+.feature-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+@media (max-width: 768px) {
+    .stats-row { gap: 24px; }
+    .features-grid { grid-template-columns: 1fr; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="hero">
+        <div class="pill badge-topic mb-3">Python → Java</div>
+        <h1>You know how to code.<br><span>We teach you the difference.</span></h1>
+        <p>Master Java interviews without starting from scratch. See every concept side by side.</p>
+        <a href="#topics" class="hero-cta">Browse Problems →</a>
+
+        <div class="stats-row">
+            <div class="stat-item">
+                <div class="stat-number">{{ problems_count }}</div>
+                <div class="stat-label">Problems</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ categories|length }}</div>
+                <div class="stat-label">Categories</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="solved-count">0</div>
+                <div class="stat-label">Solved by you</div>
+            </div>
         </div>
     </div>
 
-    <div class="container py-5" id="topics">
-        <h2 class="fw-bold mb-4">Browse by Topic</h2>
-        <div class="row">
+    <div id="progress-section" style="display:none" class="progress-track">
+        <div class="d-flex justify-content-between align-items-center">
+            <span style="font-size:14px;font-weight:500;">Your Progress</span>
+            <span style="font-size:13px;color:var(--text-secondary)" id="progress-label"></span>
+        </div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progress-bar" style="width:0%"></div>
+        </div>
+    </div>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <div class="feature-title">Side by side</div>
+            <div class="feature-desc">Python and Java solutions displayed together so differences are immediately obvious.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <div class="feature-title">Only the delta</div>
+            <div class="feature-desc">We don't teach Java from scratch. Just what's different from Python.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🏆</div>
+            <div class="feature-title">Interview focused</div>
+            <div class="feature-desc">Every problem is handpicked from real technical interviews.</div>
+        </div>
+    </div>
+
+    <div id="topics">
+        <p class="section-title">Browse by Topic</p>
+        <div class="row g-3">
+            {% set icons = {'Arrays': '📦', 'Strings': '🔤', 'Loops': '🔁', 'Math': '🔢', 'Sorting': '↕️'} %}
             {% for topic, topic_problems in categories.items() %}
-            <div class="col-md-4 mb-4">
-                <a href="/category/{{ topic }}" class="category-card">
-                    <div class="category-icon">
-                        {% if topic == "Arrays" %}📦
-                        {% elif topic == "Strings" %}🔤
-                        {% elif topic == "Loops" %}🔁
-                        {% elif topic == "Math" %}🔢
-                        {% else %}💡{% endif %}
-                    </div>
-                    <h5 class="fw-bold mb-1">{{ topic }}</h5>
-                    <div class="problem-count">{{ topic_problems|length }} problem{% if topic_problems|length != 1 %}s{% endif %}</div>
+            <div class="col-md-4 col-sm-6 fade-up">
+                <a href="/category/{{ topic }}" class="card-base category-card">
+                    <span class="category-icon">{{ icons.get(topic, '💡') }}</span>
+                    <div class="category-name">{{ topic }}</div>
+                    <div class="category-count">{{ topic_problems|length }} problems</div>
+                    <span class="category-arrow">→</span>
                 </a>
             </div>
             {% endfor %}
         </div>
     </div>
+</div>
+{% endblock %}
 
-    <footer class="bg-dark text-center text-secondary py-4 small">
-        © 2026 Syntaxer — 17719019 Canada Inc. · Built in Canada 🍁
-    </footer>
+{% block extra_js %}
+<script>
+const visited = JSON.parse(localStorage.getItem("syntaxer_visited") || "[]");
+const total = {{ problems_count }};
 
-</body>
-</html>
+document.getElementById('solved-count').textContent = visited.length;
+
+if (visited.length > 0) {
+    const percent = Math.round((visited.length / total) * 100);
+    document.getElementById("progress-bar").style.width = percent + "%";
+    document.getElementById("progress-label").textContent = visited.length + " of " + total + " completed";
+    document.getElementById("progress-section").style.display = "block";
+}
+</script>
+{% endblock %}

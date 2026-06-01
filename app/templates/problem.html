@@ -1,141 +1,136 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ problem.title }} — Syntaxer</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
-    <style>
-        .code-card {
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid #eee;
-        }
-        .code-header {
-            padding: 10px 16px;
-            font-size: 13px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .python-header { background: #1e3a5f; color: #7eb8f7; }
-        .java-header { background: #3b2a00; color: #f0a500; }
-        pre[class*="language-"] {
-            margin: 0;
-            border-radius: 0;
-            font-size: 13px;
-        }
-        .diff-item {
-            padding: 10px 14px;
-            border-left: 3px solid #0d6efd;
-            background: #f8f9ff;
-            border-radius: 0 8px 8px 0;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-        .explanation-box {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 20px;
-            border-left: 4px solid #0d6efd;
-        }
-        .pseudocode-box {
-            background: #1a1a2e;
-            color: #e0e0e0;
-            border-radius: 12px;
-            padding: 20px;
-            font-family: monospace;
-            font-size: 13px;
-            line-height: 1.8;
-            white-space: pre-line;
-        }
-        .visited-badge {
-            font-size: 11px;
-            background: #E1F5EE;
-            color: #085041;
-            padding: 3px 10px;
-            border-radius: 20px;
-        }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}{{ problem.title }} — Syntaxer{% endblock %}
 
-    <nav class="navbar navbar-dark bg-dark px-4 py-3">
-        <a class="navbar-brand fw-bold fs-4" href="/">Syntaxer</a>
-        <div class="d-flex gap-3">
-            <a href="/" class="text-white text-decoration-none small">Home</a>
-            <a href="/glossary" class="text-white text-decoration-none small">Glossary</a>
+{% block extra_css %}
+<style>
+.problem-header { padding: 40px 0 32px; }
+.problem-title { font-size: 36px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 12px; }
+
+.info-row { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; }
+
+.tab-nav { display: flex; gap: 4px; margin-bottom: 24px; background: var(--bg-card); padding: 4px; border-radius: 10px; width: fit-content; }
+.tab-btn { padding: 8px 18px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; background: transparent; color: var(--text-secondary); transition: all 0.2s; }
+.tab-btn.active { background: var(--bg-hover); color: var(--text-primary); }
+
+.section-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 20px; }
+.section-box-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 16px; }
+
+.diff-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.diff-item:last-child { border-bottom: none; padding-bottom: 0; }
+.diff-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; margin-top: 7px; flex-shrink: 0; }
+.diff-text { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+
+.pseudocode { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text-secondary); line-height: 2; white-space: pre-line; }
+
+.explanation-text { font-size: 15px; color: var(--text-secondary); line-height: 1.7; }
+
+.nav-problems { display: flex; justify-content: space-between; margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border); }
+.nav-prob-btn { display: flex; align-items: center; gap: 8px; padding: 12px 18px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; text-decoration: none; color: var(--text-secondary); font-size: 13px; font-weight: 500; transition: all 0.2s; }
+.nav-prob-btn:hover { border-color: var(--accent); color: var(--text-primary); }
+
+.visited-tag { display: inline-flex; align-items: center; gap: 5px; background: rgba(34,197,94,0.1); color: #22c55e; border: 1px solid rgba(34,197,94,0.2); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="problem-header">
+        <a href="javascript:history.back()" class="back-btn">← Back</a>
+
+        <h1 class="problem-title">{{ problem.title }}</h1>
+
+        <div class="info-row">
+            <span class="pill badge-{{ problem.difficulty | lower }}">{{ problem.difficulty }}</span>
+            <span class="pill badge-topic">{{ problem.topic }}</span>
+            <span class="visited-tag" id="visited-tag" style="display:none">✓ Completed</span>
         </div>
-    </nav>
 
-    <div class="container py-5">
-        <a href="javascript:history.back()" class="text-decoration-none text-secondary small">← Back</a>
-
-        <div class="d-flex align-items-center gap-3 mt-3 mb-1">
-            <h2 class="fw-bold mb-0">{{ problem.title }}</h2>
-            <span class="visited-badge" id="visited-badge" style="display:none">✓ Visited</span>
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="showTab('solutions', this)">Solutions</button>
+            <button class="tab-btn" onclick="showTab('analysis', this)">Analysis</button>
+            <button class="tab-btn" onclick="showTab('pseudocode', this)">Pseudocode</button>
         </div>
-        <p class="text-muted mb-4">Topic: {{ problem.topic }} · Difficulty: {{ problem.difficulty }}</p>
 
-        <div class="row mt-4">
-            <div class="col-md-6 mb-4">
-                <div class="code-card">
-                    <div class="code-header python-header">
-                        🐍 Python
+        <div id="tab-solutions">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="code-wrap">
+                        <div class="code-header code-header-python">🐍 Python</div>
+                        <pre><code class="language-python">{{ problem.python_solution }}</code></pre>
                     </div>
-                    <pre><code class="language-python">{{ problem.python_solution }}</code></pre>
                 </div>
-            </div>
-            <div class="col-md-6 mb-4">
-                <div class="code-card">
-                    <div class="code-header java-header">
-                        ☕ Java
+                <div class="col-md-6">
+                    <div class="code-wrap">
+                        <div class="code-header code-header-java">☕ Java</div>
+                        <pre><code class="language-java">{{ problem.java_solution }}</code></pre>
                     </div>
-                    <pre><code class="language-java">{{ problem.java_solution }}</code></pre>
                 </div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-6 mb-4">
-                <h5 class="fw-bold mb-3">Key Differences</h5>
-                {% for diff in problem.differences %}
-                <div class="diff-item">{{ diff }}</div>
-                {% endfor %}
-            </div>
-            <div class="col-md-6 mb-4">
-                <h5 class="fw-bold mb-3">Pseudocode</h5>
-                <div class="pseudocode-box">{{ problem.pseudocode }}</div>
+        <div id="tab-analysis" style="display:none">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="section-box">
+                        <div class="section-box-title">Key Differences</div>
+                        {% for diff in problem.differences %}
+                        <div class="diff-item">
+                            <div class="diff-dot"></div>
+                            <div class="diff-text">{{ diff }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="section-box">
+                        <div class="section-box-title">How it works</div>
+                        <div class="explanation-text">{{ problem.explanation }}</div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="mt-2">
-            <h5 class="fw-bold mb-3">How it works</h5>
-            <div class="explanation-box">{{ problem.explanation }}</div>
+        <div id="tab-pseudocode" style="display:none">
+            <div class="section-box">
+                <div class="section-box-title">Pseudocode</div>
+                <div class="pseudocode">{{ problem.pseudocode }}</div>
+            </div>
+        </div>
+
+        <div class="nav-problems">
+            {% if problem.id > 1 %}
+            <a href="/problem/{{ problem.id - 1 }}" class="nav-prob-btn">← Previous</a>
+            {% else %}
+            <div></div>
+            {% endif %}
+            {% if problem.id < 50 %}
+            <a href="/problem/{{ problem.id + 1 }}" class="nav-prob-btn">Next →</a>
+            {% endif %}
         </div>
     </div>
+</div>
+{% endblock %}
 
-    <footer class="bg-dark text-center text-secondary py-4 small">
-        © 2026 Syntaxer — 17719019 Canada Inc. · Built in Canada 🍁
-    </footer>
+{% block extra_js %}
+<script>
+const problemId = "{{ problem.id }}";
+const visited = JSON.parse(localStorage.getItem("syntaxer_visited") || "[]");
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
-    <script>
-        const problemId = "{{ problem.id }}";
-        const visited = JSON.parse(localStorage.getItem("visited") || "[]");
+if (visited.includes(problemId)) {
+    document.getElementById("visited-tag").style.display = "inline-flex";
+}
 
-        if (visited.includes(problemId)) {
-            document.getElementById("visited-badge").style.display = "inline";
-        }
+if (!visited.includes(problemId)) {
+    visited.push(problemId);
+    localStorage.setItem("syntaxer_visited", JSON.stringify(visited));
+}
 
-        if (!visited.includes(problemId)) {
-            visited.push(problemId);
-            localStorage.setItem("visited", JSON.stringify(visited));
-        }
-    </script>
-
-</body>
-</html>
+function showTab(tab, btn) {
+    ['solutions', 'analysis', 'pseudocode'].forEach(t => {
+        document.getElementById('tab-' + t).style.display = t === tab ? 'block' : 'none';
+    });
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+</script>
+{% endblock %}
