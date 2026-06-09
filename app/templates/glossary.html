@@ -1,36 +1,116 @@
 {% extends "base.html" %}
-{% block title %}Glossary — Syntaxer{% endblock %}
-
-{% block extra_css %}
+{% block title %}Python→Java Glossary{% endblock %}
+{% block extra_head %}
 <style>
-.glossary-header { padding: 48px 0 32px; }
-.glossary-row { display: flex; align-items: center; gap: 16px; padding: 14px 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px; transition: all 0.2s; }
-.glossary-row:hover { border-color: var(--border-hover); background: var(--bg-hover); }
-.lang-badge { font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 5px 14px; border-radius: 8px; min-width: 160px; text-align: center; }
-.py-badge { background: rgba(59, 130, 246, 0.1); color: #7eb8f7; border: 1px solid rgba(59, 130, 246, 0.2); }
-.java-badge { background: rgba(249, 115, 22, 0.1); color: #f97316; border: 1px solid rgba(249, 115, 22, 0.2); }
-.arrow-badge { color: var(--text-muted); font-size: 16px; }
-.example-text { font-size: 12px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; flex: 1; }
+.glossary-page { padding: 40px 0; }
+.gloss-section { margin-bottom: 48px; }
+.gloss-section h2 { font-size: 1rem; font-weight: 700; color: var(--accent2); margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+.gloss-table { width: 100%; border-collapse: collapse; }
+.gloss-table th { text-align: left; padding: 10px 14px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); background: var(--card); border-bottom: 1px solid var(--border); }
+.gloss-table td { padding: 12px 14px; border-bottom: 1px solid rgba(42,42,62,.5); font-size: 13px; vertical-align: top; }
+.gloss-table tr:hover td { background: var(--card2); }
+code { background: var(--card2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; font-size: 12px; }
+.py-col { color: #93c5fd; }
+.java-col { color: #fcd34d; }
 </style>
 {% endblock %}
-
 {% block content %}
-<div class="container">
-    <div class="glossary-header">
-        <a href="/" class="back-btn">← Back to Home</a>
-        <h2 style="font-size:32px;font-weight:700;letter-spacing:-0.5px;margin-bottom:8px;">Python → Java Glossary</h2>
-        <p style="color:var(--text-secondary);font-size:15px;margin-bottom:32px;">Quick reference for the most common syntax translations.</p>
+<div class="container glossary-page">
+  <h1 style="font-size:2rem;font-weight:800;margin-bottom:8px">Python → Java Glossary</h1>
+  <p style="color:var(--muted);margin-bottom:40px">Quick reference for the most common syntax differences.</p>
 
-        <p class="section-title">{{ glossary|length }} terms</p>
+  <div class="gloss-section fade-in">
+    <h2>Null / None</h2>
+    <table class="gloss-table">
+      <tr><th>Python</th><th>Java</th><th>Notes</th></tr>
+      <tr><td class="py-col"><code>None</code></td><td class="java-col"><code>null</code></td><td>Null value</td></tr>
+      <tr><td class="py-col"><code>if not x</code></td><td class="java-col"><code>if (x == null)</code></td><td>Null check</td></tr>
+      <tr><td class="py-col"><code>x or y</code></td><td class="java-col"><code>x != null ? x : y</code></td><td>Null fallback</td></tr>
+    </table>
+  </div>
 
-        {% for item in glossary %}
-        <div class="glossary-row">
-            <span class="lang-badge py-badge">{{ item.python }}</span>
-            <span class="arrow-badge">→</span>
-            <span class="lang-badge java-badge">{{ item.java }}</span>
-            <span class="example-text">{{ item.example }}</span>
-        </div>
-        {% endfor %}
-    </div>
+  <div class="gloss-section fade-in fade-in-1">
+    <h2>Data Structures</h2>
+    <table class="gloss-table">
+      <tr><th>Python</th><th>Java</th><th>Notes</th></tr>
+      <tr><td class="py-col"><code>dict</code></td><td class="java-col"><code>HashMap&lt;K,V&gt;</code></td><td>Key-value map</td></tr>
+      <tr><td class="py-col"><code>set</code></td><td class="java-col"><code>HashSet&lt;T&gt;</code></td><td>Unique elements</td></tr>
+      <tr><td class="py-col"><code>list</code></td><td class="java-col"><code>ArrayList&lt;T&gt;</code></td><td>Dynamic array</td></tr>
+      <tr><td class="py-col"><code>deque</code></td><td class="java-col"><code>ArrayDeque&lt;T&gt;</code></td><td>Double-ended queue</td></tr>
+      <tr><td class="py-col"><code>[]</code> as stack</td><td class="java-col"><code>Stack&lt;T&gt;</code></td><td>LIFO stack</td></tr>
+      <tr><td class="py-col"><code>deque</code></td><td class="java-col"><code>LinkedList&lt;T&gt;</code></td><td>Queue (FIFO)</td></tr>
+      <tr><td class="py-col"><code>[0]*n</code></td><td class="java-col"><code>new int[n]</code></td><td>Fixed array</td></tr>
+      <tr><td class="py-col"><code>[0]*n</code> (list)</td><td class="java-col"><code>Arrays.fill(arr, 0)</code></td><td>Initialize</td></tr>
+    </table>
+  </div>
+
+  <div class="gloss-section fade-in fade-in-2">
+    <h2>String Operations</h2>
+    <table class="gloss-table">
+      <tr><th>Python</th><th>Java</th><th>Notes</th></tr>
+      <tr><td class="py-col"><code>s[::-1]</code></td><td class="java-col"><code>new StringBuilder(s).reverse().toString()</code></td><td>Reverse string</td></tr>
+      <tr><td class="py-col"><code>s == t</code></td><td class="java-col"><code>s.equals(t)</code></td><td>String equality — never use == in Java</td></tr>
+      <tr><td class="py-col"><code>for c in s</code></td><td class="java-col"><code>for (char c : s.toCharArray())</code></td><td>Iterate chars</td></tr>
+      <tr><td class="py-col"><code>s[i]</code></td><td class="java-col"><code>s.charAt(i)</code></td><td>Access char</td></tr>
+      <tr><td class="py-col"><code>s[i:j]</code></td><td class="java-col"><code>s.substring(i, j)</code></td><td>Slice string</td></tr>
+      <tr><td class="py-col"><code>'x' * n</code></td><td class="java-col"><code>"x".repeat(n)</code></td><td>Repeat string (Java 11+)</td></tr>
+      <tr><td class="py-col"><code>int(c)</code></td><td class="java-col"><code>c - '0'</code></td><td>Char to int digit</td></tr>
+      <tr><td class="py-col"><code>ord(c)</code></td><td class="java-col"><code>(int) c</code></td><td>Char to ASCII</td></tr>
+      <tr><td class="py-col"><code>str(n)</code></td><td class="java-col"><code>String.valueOf(n)</code></td><td>Int to string</td></tr>
+      <tr><td class="py-col"><code>''.join(lst)</code></td><td class="java-col"><code>String.join("", list)</code></td><td>Join list</td></tr>
+    </table>
+  </div>
+
+  <div class="gloss-section fade-in fade-in-3">
+    <h2>Math & Numbers</h2>
+    <table class="gloss-table">
+      <tr><th>Python</th><th>Java</th><th>Notes</th></tr>
+      <tr><td class="py-col"><code>float('inf')</code></td><td class="java-col"><code>Integer.MAX_VALUE</code></td><td>Positive infinity / max</td></tr>
+      <tr><td class="py-col"><code>float('-inf')</code></td><td class="java-col"><code>Integer.MIN_VALUE</code></td><td>Negative infinity / min</td></tr>
+      <tr><td class="py-col"><code>a // b</code></td><td class="java-col"><code>a / b</code></td><td>Integer division (both ints)</td></tr>
+      <tr><td class="py-col"><code>a ** b</code></td><td class="java-col"><code>Math.pow(a, b)</code></td><td>Power</td></tr>
+      <tr><td class="py-col"><code>abs(x)</code></td><td class="java-col"><code>Math.abs(x)</code></td><td>Absolute value</td></tr>
+      <tr><td class="py-col"><code>max(a, b)</code></td><td class="java-col"><code>Math.max(a, b)</code></td><td>Max of two</td></tr>
+      <tr><td class="py-col"><code>min(a, b)</code></td><td class="java-col"><code>Math.min(a, b)</code></td><td>Min of two</td></tr>
+      <tr><td class="py-col"><code>divmod(a, b)</code></td><td class="java-col"><code>a/b, a%b</code></td><td>Quotient and remainder</td></tr>
+    </table>
+  </div>
+
+  <div class="gloss-section fade-in">
+    <h2>Control Flow</h2>
+    <table class="gloss-table">
+      <tr><th>Python</th><th>Java</th><th>Notes</th></tr>
+      <tr><td class="py-col"><code>and</code></td><td class="java-col"><code>&&</code></td><td>Logical AND</td></tr>
+      <tr><td class="py-col"><code>or</code></td><td class="java-col"><code>||</code></td><td>Logical OR</td></tr>
+      <tr><td class="py-col"><code>not</code></td><td class="java-col"><code>!</code></td><td>Logical NOT</td></tr>
+      <tr><td class="py-col"><code>True / False</code></td><td class="java-col"><code>true / false</code></td><td>Booleans (case sensitive)</td></tr>
+      <tr><td class="py-col"><code>elif</code></td><td class="java-col"><code>else if</code></td><td>Else-if branch</td></tr>
+      <tr><td class="py-col"><code>while True: ... break</code></td><td class="java-col"><code>do { ... } while (cond)</code></td><td>Do-while loop</td></tr>
+      <tr><td class="py-col"><code>x if c else y</code></td><td class="java-col"><code>c ? x : y</code></td><td>Ternary expression</td></tr>
+      <tr><td class="py-col"><code>a &lt;= x &lt; b</code></td><td class="java-col"><code>a &lt;= x &amp;&amp; x &lt; b</code></td><td>Chained comparison</td></tr>
+    </table>
+  </div>
+
+  <div class="gloss-section fade-in fade-in-1">
+    <h2>Sorting</h2>
+    <table class="gloss-table">
+      <tr><th>Python</th><th>Java</th><th>Notes</th></tr>
+      <tr><td class="py-col"><code>lst.sort()</code></td><td class="java-col"><code>Arrays.sort(arr)</code></td><td>In-place sort</td></tr>
+      <tr><td class="py-col"><code>sorted(lst)</code></td><td class="java-col"><code>Arrays.sort(arr.clone())</code></td><td>Returns new sorted</td></tr>
+      <tr><td class="py-col"><code>lst.sort(key=fn)</code></td><td class="java-col"><code>Arrays.sort(arr, (a,b) -> ...)</code></td><td>Custom sort</td></tr>
+      <tr><td class="py-col"><code>lst.sort(reverse=True)</code></td><td class="java-col"><code>Arrays.sort(arr, Collections.reverseOrder())</code></td><td>Descending sort</td></tr>
+    </table>
+  </div>
+
+  <div class="gloss-section fade-in fade-in-2">
+    <h2>Class Definitions</h2>
+    <table class="gloss-table">
+      <tr><th>Python</th><th>Java</th><th>Notes</th></tr>
+      <tr><td class="py-col"><code>def __init__(self)</code></td><td class="java-col"><code>ClassName() { }</code></td><td>Constructor</td></tr>
+      <tr><td class="py-col"><code>self.x = y</code></td><td class="java-col"><code>this.x = y</code></td><td>Instance variable</td></tr>
+      <tr><td class="py-col"><code>def method(self)</code></td><td class="java-col"><code>public void method()</code></td><td>Instance method</td></tr>
+      <tr><td class="py-col"><code>isinstance(x, T)</code></td><td class="java-col"><code>x instanceof T</code></td><td>Type check</td></tr>
+    </table>
+  </div>
 </div>
 {% endblock %}

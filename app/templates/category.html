@@ -1,46 +1,64 @@
 {% extends "base.html" %}
-{% block title %}{{ topic }} Problems — Syntaxer{% endblock %}
+{% block title %}{{ topic }} Problems{% endblock %}
 
-{% block extra_css %}
+{% block extra_head %}
 <style>
-.problem-card { padding: 20px 24px; }
-.problem-number { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; }
-.problem-title { font-size: 17px; font-weight: 600; margin-bottom: 10px; }
-.problem-hint { font-size: 13px; color: var(--text-secondary); }
-.problem-arrow { float: right; color: var(--text-muted); transition: all 0.2s; }
-.card-base:hover .problem-arrow { color: var(--accent); transform: translateX(4px); }
-.topic-header { padding: 48px 0 32px; }
+.page-header { padding: 40px 0 32px; }
+.back-link { color: var(--muted); font-size: 13px; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 16px; }
+.back-link:hover { color: var(--text); }
+.problem-list { display: flex; flex-direction: column; gap: 10px; }
+.problem-row { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; gap: 16px; transition: all .2s; cursor: pointer; }
+.problem-row:hover { border-color: var(--accent); background: var(--card2); transform: translateX(4px); }
+.problem-num { color: var(--muted); font-size: 13px; width: 28px; flex-shrink: 0; }
+.problem-title { font-weight: 600; flex: 1; }
+.problem-check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; }
+.problem-check.solved { background: var(--easy); border-color: var(--easy); color: white; }
+
+.filter-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+.filter-tab { background: var(--card2); border: 1px solid var(--border); color: var(--muted); border-radius: 8px; padding: 6px 14px; font-size: 13px; cursor: pointer; text-decoration: none; transition: all .2s; }
+.filter-tab:hover, .filter-tab.active { background: rgba(124,106,247,.15); border-color: var(--accent); color: var(--text); }
+.filter-tab.easy.active { background: rgba(16,185,129,.15); border-color: var(--easy); color: var(--easy); }
+.filter-tab.medium.active { background: rgba(245,158,11,.15); border-color: var(--medium); color: var(--medium); }
+.filter-tab.hard.active { background: rgba(239,68,68,.15); border-color: var(--hard); color: var(--hard); }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    <div class="topic-header">
-        <a href="/" class="back-btn">← Back to Topics</a>
-        <div class="d-flex align-items-center gap-3 mb-2">
-            <h2 style="font-size:32px;font-weight:700;letter-spacing:-0.5px;margin:0;">{{ topic }}</h2>
-            <span class="pill badge-topic">{{ problems|length }} problems</span>
-        </div>
-        <p style="color:var(--text-secondary);font-size:15px;margin:0;">Python vs Java — side by side solutions with explanations</p>
-    </div>
+  <div class="page-header fade-in">
+    <a class="back-link" href="/">← All Categories</a>
+    <h1 style="font-size:2rem;font-weight:800">{{ topic }}</h1>
+    <p style="color:var(--muted);margin-top:6px">{{ problems|length }} problems · Python to Java syntax differences</p>
+  </div>
 
-    <div class="row g-3">
-        {% for problem in problems %}
-        <div class="col-md-6 fade-up">
-            <a href="/problem/{{ problem.id }}" class="card-base problem-card">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div style="flex:1">
-                        <div class="problem-number">#{{ problem.id }}</div>
-                        <div class="problem-title">{{ problem.title }}</div>
-                        <div class="d-flex gap-2">
-                            <span class="pill badge-{{ problem.difficulty | lower }}">{{ problem.difficulty }}</span>
-                        </div>
-                    </div>
-                    <span class="problem-arrow">→</span>
-                </div>
-            </a>
-        </div>
-        {% endfor %}
-    </div>
+  <div class="filter-tabs fade-in">
+    <a class="filter-tab {% if diff_filter == 'all' %}active{% endif %}" href="/category/{{ topic }}">All</a>
+    <a class="filter-tab easy {% if diff_filter == 'easy' %}active{% endif %}" href="/category/{{ topic }}?difficulty=easy">Easy</a>
+    <a class="filter-tab medium {% if diff_filter == 'medium' %}active{% endif %}" href="/category/{{ topic }}?difficulty=medium">Medium</a>
+    <a class="filter-tab hard {% if diff_filter == 'hard' %}active{% endif %}" href="/category/{{ topic }}?difficulty=hard">Hard</a>
+  </div>
+
+  <div class="problem-list fade-in fade-in-1">
+    {% for p in problems %}
+    <a href="/problem/{{ p.id }}" style="text-decoration:none">
+      <div class="problem-row" data-id="{{ p.id }}">
+        <span class="problem-num">{{ loop.index }}</span>
+        <span class="problem-title">{{ p.title }}</span>
+        <span class="badge-{{ p.difficulty.lower() }}">{{ p.difficulty }}</span>
+        <div class="problem-check {% if p.id in [] %}solved{% endif %}" id="check-{{ p.id }}"></div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const visited = JSON.parse(localStorage.getItem('syntaxer_visited') || '[]');
+visited.forEach(id => {
+  const el = document.getElementById('check-' + id);
+  if (el) { el.classList.add('solved'); el.textContent = '✓'; }
+});
+</script>
 {% endblock %}

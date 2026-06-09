@@ -1,136 +1,153 @@
 {% extends "base.html" %}
-{% block title %}{{ problem.title }} — Syntaxer{% endblock %}
+{% block title %}{{ problem.title }}{% endblock %}
 
-{% block extra_css %}
+{% block extra_head %}
 <style>
-.problem-header { padding: 40px 0 32px; }
-.problem-title { font-size: 36px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 12px; }
+.problem-header { padding: 32px 0 24px; }
+.back-link { color: var(--muted); font-size: 13px; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 16px; }
+.tab-nav { display: flex; gap: 4px; margin-bottom: 24px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 4px; width: fit-content; }
+.tab-btn { border: none; background: transparent; color: var(--muted); padding: 8px 18px; border-radius: 7px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all .2s; }
+.tab-btn.active { background: var(--accent); color: white; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
 
-.info-row { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; }
+.code-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+.code-block { }
+.code-header { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.lang-dot { width: 8px; height: 8px; border-radius: 50%; }
+.py-dot { background: #3b82f6; }
+.java-dot { background: #f59e0b; }
 
-.tab-nav { display: flex; gap: 4px; margin-bottom: 24px; background: var(--bg-card); padding: 4px; border-radius: 10px; width: fit-content; }
-.tab-btn { padding: 8px 18px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; background: transparent; color: var(--text-secondary); transition: all 0.2s; }
-.tab-btn.active { background: var(--bg-hover); color: var(--text-primary); }
+.diff-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.diff-item { background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 13px; display: flex; align-items: flex-start; gap: 10px; }
+.diff-item::before { content: '⟶'; color: var(--accent); flex-shrink: 0; }
 
-.section-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 20px; }
-.section-box-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 16px; }
+.explanation-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; }
+.explanation-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 10px; color: var(--accent2); }
 
-.diff-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
-.diff-item:last-child { border-bottom: none; padding-bottom: 0; }
-.diff-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; margin-top: 7px; flex-shrink: 0; }
-.diff-text { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+.nav-btns { display: flex; gap: 12px; padding: 24px 0; }
+.nav-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 8px 16px; font-size: 13px; cursor: pointer; transition: all .2s; text-decoration: none; }
+.nav-btn:hover { border-color: var(--accent); color: var(--text); }
+.nav-btn.primary { background: var(--accent); border-color: var(--accent); color: white; }
 
-.pseudocode { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text-secondary); line-height: 2; white-space: pre-line; }
-
-.explanation-text { font-size: 15px; color: var(--text-secondary); line-height: 1.7; }
-
-.nav-problems { display: flex; justify-content: space-between; margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border); }
-.nav-prob-btn { display: flex; align-items: center; gap: 8px; padding: 12px 18px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; text-decoration: none; color: var(--text-secondary); font-size: 13px; font-weight: 500; transition: all 0.2s; }
-.nav-prob-btn:hover { border-color: var(--accent); color: var(--text-primary); }
-
-.visited-tag { display: inline-flex; align-items: center; gap: 5px; background: rgba(34,197,94,0.1); color: #22c55e; border: 1px solid rgba(34,197,94,0.2); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+.solved-btn { background: rgba(16,185,129,.15); border: 1px solid rgba(16,185,129,.3); color: var(--easy); border-radius: 8px; padding: 8px 16px; font-size: 13px; cursor: pointer; transition: all .2s; margin-left: auto; }
+.solved-btn.done { background: var(--easy); color: white; }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    <div class="problem-header">
-        <a href="javascript:history.back()" class="back-btn">← Back</a>
-
-        <h1 class="problem-title">{{ problem.title }}</h1>
-
-        <div class="info-row">
-            <span class="pill badge-{{ problem.difficulty | lower }}">{{ problem.difficulty }}</span>
-            <span class="pill badge-topic">{{ problem.topic }}</span>
-            <span class="visited-tag" id="visited-tag" style="display:none">✓ Completed</span>
-        </div>
-
-        <div class="tab-nav">
-            <button class="tab-btn active" onclick="showTab('solutions', this)">Solutions</button>
-            <button class="tab-btn" onclick="showTab('analysis', this)">Analysis</button>
-            <button class="tab-btn" onclick="showTab('pseudocode', this)">Pseudocode</button>
-        </div>
-
-        <div id="tab-solutions">
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <div class="code-wrap">
-                        <div class="code-header code-header-python">🐍 Python</div>
-                        <pre><code class="language-python">{{ problem.python_solution }}</code></pre>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="code-wrap">
-                        <div class="code-header code-header-java">☕ Java</div>
-                        <pre><code class="language-java">{{ problem.java_solution }}</code></pre>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="tab-analysis" style="display:none">
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <div class="section-box">
-                        <div class="section-box-title">Key Differences</div>
-                        {% for diff in problem.differences %}
-                        <div class="diff-item">
-                            <div class="diff-dot"></div>
-                            <div class="diff-text">{{ diff }}</div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="section-box">
-                        <div class="section-box-title">How it works</div>
-                        <div class="explanation-text">{{ problem.explanation }}</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="tab-pseudocode" style="display:none">
-            <div class="section-box">
-                <div class="section-box-title">Pseudocode</div>
-                <div class="pseudocode">{{ problem.pseudocode }}</div>
-            </div>
-        </div>
-
-        <div class="nav-problems">
-            {% if problem.id > 1 %}
-            <a href="/problem/{{ problem.id - 1 }}" class="nav-prob-btn">← Previous</a>
-            {% else %}
-            <div></div>
-            {% endif %}
-            {% if problem.id < 50 %}
-            <a href="/problem/{{ problem.id + 1 }}" class="nav-prob-btn">Next →</a>
-            {% endif %}
-        </div>
+  <div class="problem-header fade-in">
+    <a class="back-link" href="/category/{{ problem.topic }}">← {{ problem.topic }}</a>
+    <div class="d-flex align-items-center gap-12 flex-wrap" style="gap:12px">
+      <h1 style="font-size:1.8rem;font-weight:800;margin:0">{{ problem.title }}</h1>
+      <span class="badge-{{ problem.difficulty.lower() }}">{{ problem.difficulty }}</span>
+      <button class="solved-btn ms-auto" id="solved-btn" onclick="toggleSolved({{ problem.id }})">Mark Solved</button>
     </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tab-nav fade-in">
+    <button class="tab-btn active" onclick="showTab('solutions', this)">Solutions</button>
+    <button class="tab-btn" onclick="showTab('analysis', this)">Analysis</button>
+    <button class="tab-btn" onclick="showTab('pseudocode', this)">Pseudocode</button>
+  </div>
+
+  <!-- Solutions Tab -->
+  <div class="tab-content active fade-in fade-in-1" id="tab-solutions">
+    <div class="code-grid">
+      <div class="code-block">
+        <div class="code-header"><span class="lang-dot py-dot"></span> Python</div>
+        <pre><code class="language-python">{{ problem.python_solution }}</code></pre>
+      </div>
+      <div class="code-block">
+        <div class="code-header"><span class="lang-dot java-dot"></span> Java</div>
+        <pre><code class="language-java">{{ problem.java_solution }}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analysis Tab -->
+  <div class="tab-content" id="tab-analysis">
+    <div class="explanation-card">
+      <h3>Key Insight</h3>
+      <p style="color:var(--text);font-size:14px;line-height:1.7;margin:0">{{ problem.explanation }}</p>
+    </div>
+    <div class="explanation-card">
+      <h3>Python → Java Differences</h3>
+      <ul class="diff-list">
+        {% for diff in problem.differences %}
+        <li class="diff-item">{{ diff }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <!-- Side by side again for reference -->
+    <div class="code-grid mt-3">
+      <div class="code-block">
+        <div class="code-header"><span class="lang-dot py-dot"></span> Python</div>
+        <pre><code class="language-python">{{ problem.python_solution }}</code></pre>
+      </div>
+      <div class="code-block">
+        <div class="code-header"><span class="lang-dot java-dot"></span> Java</div>
+        <pre><code class="language-java">{{ problem.java_solution }}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pseudocode Tab -->
+  <div class="tab-content" id="tab-pseudocode">
+    <div class="explanation-card">
+      <h3>Algorithm Steps</h3>
+      <pre style="background:transparent;border:none;padding:0;color:var(--text);font-size:14px;line-height:2;margin:0">{{ problem.pseudocode }}</pre>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="nav-btns fade-in">
+    {% if prev_id %}
+    <a class="nav-btn" href="/problem/{{ prev_id }}">← Previous</a>
+    {% endif %}
+    <a class="nav-btn" href="/category/{{ problem.topic }}">All {{ problem.topic }}</a>
+    {% if next_id %}
+    <a class="nav-btn primary" href="/problem/{{ next_id }}">Next →</a>
+    {% endif %}
+  </div>
 </div>
 {% endblock %}
 
-{% block extra_js %}
+{% block scripts %}
 <script>
-const problemId = "{{ problem.id }}";
-const visited = JSON.parse(localStorage.getItem("syntaxer_visited") || "[]");
-
-if (visited.includes(problemId)) {
-    document.getElementById("visited-tag").style.display = "inline-flex";
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
 }
 
-if (!visited.includes(problemId)) {
-    visited.push(problemId);
-    localStorage.setItem("syntaxer_visited", JSON.stringify(visited));
+const PID = {{ problem.id }};
+let visited = JSON.parse(localStorage.getItem('syntaxer_visited') || '[]');
+
+function updateBtn() {
+  const btn = document.getElementById('solved-btn');
+  if (visited.includes(PID)) {
+    btn.textContent = '✓ Solved';
+    btn.classList.add('done');
+  } else {
+    btn.textContent = 'Mark Solved';
+    btn.classList.remove('done');
+  }
 }
 
-function showTab(tab, btn) {
-    ['solutions', 'analysis', 'pseudocode'].forEach(t => {
-        document.getElementById('tab-' + t).style.display = t === tab ? 'block' : 'none';
-    });
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+function toggleSolved(id) {
+  if (visited.includes(id)) {
+    visited = visited.filter(x => x !== id);
+  } else {
+    visited.push(id);
+  }
+  localStorage.setItem('syntaxer_visited', JSON.stringify(visited));
+  updateBtn();
 }
+
+updateBtn();
 </script>
 {% endblock %}

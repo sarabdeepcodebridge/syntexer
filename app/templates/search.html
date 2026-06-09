@@ -1,51 +1,41 @@
 {% extends "base.html" %}
-{% block title %}Search — Syntaxer{% endblock %}
-
-{% block extra_css %}
+{% block title %}Search{% endblock %}
+{% block extra_head %}
 <style>
-.search-header { padding: 48px 0 32px; }
-.result-card { padding: 20px 24px; margin-bottom: 10px; }
-.result-number { font-size: 12px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-bottom: 4px; }
-.result-title { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
-.no-results { text-align: center; padding: 80px 0; color: var(--text-muted); }
-.no-results-icon { font-size: 48px; margin-bottom: 16px; }
+.search-page { padding: 40px 0; }
+.result-row { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; gap: 16px; margin-bottom: 10px; transition: all .2s; }
+.result-row:hover { border-color: var(--accent); background: var(--card2); transform: translateX(4px); }
 </style>
 {% endblock %}
-
 {% block content %}
-<div class="container">
-    <div class="search-header">
-        <a href="/" class="back-btn">← Back to Home</a>
-        <h2 style="font-size:32px;font-weight:700;letter-spacing:-0.5px;margin-bottom:8px;">
-            {% if query %}Search results for "{{ query }}"{% else %}Search{% endif %}
-        </h2>
-        {% if results %}
-        <p style="color:var(--text-secondary);margin-bottom:32px;">{{ results|length }} result{% if results|length != 1 %}s{% endif %} found</p>
-        {% endif %}
+<div class="container search-page">
+  <h1 style="font-size:1.8rem;font-weight:800;margin-bottom:8px">
+    {% if query %}Results for "{{ query }}"{% else %}Search Problems{% endif %}
+  </h1>
+  <p style="color:var(--muted);margin-bottom:32px">{{ results|length }} result{% if results|length != 1 %}s{% endif %} found</p>
 
-        {% if results %}
-            {% for problem in results %}
-            <a href="/problem/{{ problem.id }}" class="card-base result-card d-block">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <div class="result-number">#{{ problem.id }}</div>
-                        <div class="result-title">{{ problem.title }}</div>
-                        <div class="d-flex gap-2">
-                            <span class="pill badge-{{ problem.difficulty | lower }}">{{ problem.difficulty }}</span>
-                            <span class="pill badge-topic">{{ problem.topic }}</span>
-                        </div>
-                    </div>
-                    <span style="color:var(--text-muted)">→</span>
-                </div>
-            </a>
-            {% endfor %}
-        {% elif query %}
-            <div class="no-results">
-                <div class="no-results-icon">🔍</div>
-                <div style="font-size:18px;font-weight:600;color:var(--text-primary);margin-bottom:8px;">No results found</div>
-                <div>Try searching for a topic like "Arrays", "Strings", or a problem name like "Two Sum"</div>
-            </div>
-        {% endif %}
+  {% if results %}
+    {% for p in results %}
+    <a href="/problem/{{ p.id }}" style="text-decoration:none">
+      <div class="result-row fade-in">
+        <span style="color:var(--muted);font-size:13px;width:32px">#{{ p.id }}</span>
+        <span style="font-weight:600;flex:1">{{ p.title }}</span>
+        <span style="color:var(--muted);font-size:12px">{{ p.topic }}</span>
+        <span class="badge-{{ p.difficulty.lower() }}">{{ p.difficulty }}</span>
+      </div>
+    </a>
+    {% endfor %}
+  {% elif query %}
+    <div style="text-align:center;padding:60px 0;color:var(--muted)">
+      <div style="font-size:2rem;margin-bottom:12px">🔍</div>
+      <p>No results for "{{ query }}"</p>
+      <a href="/" style="color:var(--accent)">Browse all problems</a>
     </div>
+  {% else %}
+    <div style="text-align:center;padding:60px 0;color:var(--muted)">
+      <div style="font-size:2rem;margin-bottom:12px">🔍</div>
+      <p>Enter a search term above</p>
+    </div>
+  {% endif %}
 </div>
 {% endblock %}
